@@ -49,6 +49,33 @@
             background-color: var(--peers-blue);
             color: white;
         }
+
+          /* Estilos para o termômetro visual */
+        .thermometer-gradient {
+            background: linear-gradient(to right, 
+                #ef4444 0%, 
+                #f59e0b 25%, 
+                #fde047 50%, 
+                #84cc16 75%, 
+                #22c55e 100%
+            );
+        }
+        
+        .score-indicator {
+            transition: left 0.7s ease-in-out;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* Estilos para os pilares de governança */
+        .governance-pillar {
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .governance-pillar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
         
         .maturity-option {
             transition: all 0.3s ease;
@@ -90,129 +117,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-                .btn-secondary:hover {
-            background-color: var(--peers-blue);
-            color: white;
-        }
-        
-        /* Estilos para o termômetro */
-        .thermometer-gradient {
-            background: linear-gradient(to right, 
-                #ef4444 0%, 
-                #f59e0b 25%, 
-                #fde047 50%, 
-                #84cc16 75%, 
-                #22c55e 100%
-            );
-        }
-        
-        /* Estilos para os pilares de governança */
-        .puzzle-piece {
-            position: relative;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .puzzle-piece:hover {
-            transform: translateY(-5px);
-        }
-        
-        .puzzle-piece::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: -20px;
-            width: 40px;
-            height: 40px;
-            background: inherit;
-            border-radius: 50%;
-            transform: translateY(-50%);
-        }
-        
-        .puzzle-piece::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: -20px;
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            transform: translateY(-50%);
-        }
-        
-        .puzzle-piece:first-child::after {
-            display: none;
-        }
-        
-        .puzzle-piece:last-child::before {
-            display: none;
-        }
-        
-        .maturity-option {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .maturity-option:hover {
-            transform: scale(1.05);
-        }
-        
-        .maturity-option.selected {
-            background-color: var(--peers-lime);
-            color: var(--peers-blue);
-        }
-        
-        .principle-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .question-card {
-            background: #f9fafb;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .recommendation-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-left: 4px solid var(--peers-lime);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1rem;
-        }
-        
-        .level-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; }
-            .principle-card { page-break-inside: avoid; }
         }
         
 .info-icon {
@@ -453,7 +357,20 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">E-mail corporativo *</label>
                 <input type="email" id="userEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" placeholder="seu@email.com">
             </div>
-            
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">WhatsApp</label>
+                <input 
+                    type="tel" 
+                    id="userWhatsapp" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" 
+                    placeholder="(11) 99999-9999" 
+                    maxlength="15"
+                    autocomplete="tel"
+                    inputmode="numeric">
+                <span class="text-xs text-gray-500 mt-1">Digite apenas números</span>
+            </div>
+                        
             <div class="flex items-start mt-4">
                 <input type="checkbox" id="consent" required class="mt-1 mr-2">
                 <label for="consent" class="text-sm text-gray-600">
@@ -474,116 +391,145 @@
                 <h2 class="text-3xl font-bold text-peers-blue mb-8 text-center">Relatório de Maturidade em Governança</h2>
                 
                 <!-- Overall Score -->
-                <!-- Overall Score with Thermometer -->
-                <div class="bg-peers-gray rounded-2xl p-8 mb-8">
-                    <h3 class="text-xl font-semibold text-peers-blue mb-6 text-center">Pontuação Geral</h3>
-                    
-                    <!-- Thermometer -->
-                    <div class="max-w-2xl mx-auto mb-6">
-                        <div class="relative">
-                            <div class="w-full h-12 thermometer-gradient rounded-full shadow-inner"></div>
-                            <div id="scoreIndicator" class="absolute top-1/2 transform -translate-y-1/2 w-6 h-16 bg-white border-3 border-peers-blue rounded-full shadow-lg transition-all duration-700" style="left: 0%">
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-peers-blue" id="scoreValue"></div>
+                 <div class="grid lg:grid-cols-2 gap-8 mb-8 items-center">
+                    <div class="text-center">
+                        <div class="bg-peers-gray rounded-2xl p-8">
+                            <h3 class="text-xl font-semibold text-peers-blue mb-4">Pontuação Geral</h3>
+                            <div id="overallScore" class="text-6xl font-bold text-peers-blue mb-2"></div>
+<!-- CÓDIGO MELHORADO (LINHAS 387-410): -->
+                            <div id="overallLevel" class="text-lg text-gray-400"></div>
+                            
+                            <!-- Termômetro Visual Melhorado -->
+                            <div class="mt-6 px-4">
+                                <div class="relative">
+                                    <!-- Barra do termômetro -->
+                                    <div class="relative w-full h-12 thermometer-gradient rounded-full shadow-inner overflow-hidden">
+                                        <!-- Indicador -->
+                                        <div id="scoreIndicator" class="absolute top-1/2 transform -translate-y-1/2 w-6 h-16 score-indicator" style="left: 0%">
+                                            <div class="w-full h-full bg-white rounded-full border-3 border-peers-blue shadow-lg flex items-center justify-center">
+                                                <span id="indicatorValue" class="text-xs font-bold text-peers-blue"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Labels -->
+                                    <div class="flex justify-between mt-3 text-xs font-medium text-gray-700">
+                                        <span>1<br><span class="text-xs text-gray-500">Não fazemos</span></span>
+                                        <span>2<br><span class="text-xs text-gray-500">Iniciando</span></span>
+                                        <span>3<br><span class="text-xs text-gray-500">Desenvolvendo</span></span>
+                                        <span>4<br><span class="text-xs text-gray-500">Consolidado</span></span>
+                                        <span>5<br><span class="text-xs text-gray-500">Excelência</span></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex justify-between mt-3 text-xs text-gray-600 font-medium">
-                            <span>1.0</span>
-                            <span>2.5</span>
-                            <span>3.5</span>
-                            <span>4.5</span>
-                            <span>5.0</span>
-                        </div>
                     </div>
-                    
-                    <div class="text-center">
-                        <div id="overallScore" class="text-5xl font-bold text-peers-blue mb-2"></div>
-                        <div id="overallLevel" class="text-lg text-gray-600"></div>
-                    </div>
-                </div>
-
-                
-
-                <!-- Imagem de Governança Corporativa -->
-                <div class="my-8 text-center">
-                    <img src="/mnt/user-data/uploads/1758740929934_image.png" 
-                        alt="Pilares de Governança Corporativa" 
-                        class="max-w-full h-auto mx-auto rounded-lg shadow-lg"
-                        style="max-width: 800px;">
-                </div>
-
-            </div>
-
-                                <div class="text-center">
-                        <div id="overallScore" class="text-5xl font-bold text-peers-blue mb-2"></div>
-                        <div id="overallLevel" class="text-lg text-gray-600"></div>
-                    </div>
-                </div>
-
-                <!-- Pilares de Governança Section -->
-                <div class="bg-white rounded-2xl p-8 mb-8">
-                    <h3 class="text-2xl font-bold text-peers-blue mb-6 text-center">Pilares de Governança Corporativa</h3>
-                    <p class="text-gray-600 text-center mb-8">Uma governança corporativa robusta deve se basear nos pilares mínimos para garantir uma boa gestão</p>
-                    
-                    <div class="flex flex-wrap justify-center items-center gap-4 max-w-6xl mx-auto">
-                        <!-- Pilar 1 -->
-                        <div class="puzzle-piece bg-blue-100" style="background-color: #E8F4F8;">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Ferramentas de integridade corporativa</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Promover cultura ética</li>
-                                <li>• Evitar conflitos de interesse</li>
-                                <li>• Manter coerência entre discurso e ação</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 2 -->
-                        <div class="puzzle-piece" style="background-color: #B5D5E0;">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Transparência além do discurso</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Disponibilizar informações verdadeiras</li>
-                                <li>• Informações devem contemplar fatores ambientais e sociais</li>
-                                <li>• Promover ambiente de confiança</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 3 -->
-                        <div class="puzzle-piece bg-peers-lime">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Equidade aos stakeholders</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Tratar todos os sócios e partes interessadas de forma justa</li>
-                                <li>• Equidade deve levar em conta diversidade e as demandas de cada perfil</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 4 -->
-                        <div class="puzzle-piece" style="background-color: #6B7280;">
-                            <h4 class="font-bold text-white text-sm mb-2">Accountability nas decisões</h4>
-                            <ul class="text-xs text-gray-200 space-y-1">
-                                <li>• Desempenhar funções com diligência</li>
-                                <li>• Assumir responsabilidade pelas consequências</li>
-                                <li>• Prestar contas de forma clara e tempestiva</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 5 -->
-                        <div class="puzzle-piece" style="background-color: #F0FD4C;">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Sustentabilidade e continuidade do negócio</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Zelar pela viabilidade econômico-financeira</li>
-                                <li>• Reduzir externalidades negativas</li>
-                                <li>• Considerar capitais financeiros, humanos, sociais e naturais</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Radar Chart -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
-                    <h3 class="text-2xl font-bold text-peers-blue mb-6 text-center">Análise Radar dos Princípios</h3>
-                    <div class="max-w-md mx-auto">
+                    <div>
                         <canvas id="radarChart"></canvas>
                     </div>
                 </div>
-            </div>
+<!-- CÓDIGO NOVO (LINHAS 406-460): -->
+<!-- Pilares de Governança Corporativa - Layout Quebra-Cabeça -->
+<style>
+    .puzzle-piece {
+        position: relative;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .puzzle-piece:hover {
+        transform: translateY(-5px);
+    }
+    
+    .puzzle-piece::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        width: 40px;
+        height: 40px;
+        background: inherit;
+        border-radius: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .puzzle-piece::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -20px;
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .puzzle-piece:first-child::after {
+        display: none;
+    }
+    
+    .puzzle-piece:last-child::before {
+        display: none;
+    }
+</style>
+
+<div class="bg-white rounded-2xl p-8 mb-8">
+    <h3 class="text-2xl font-bold text-peers-blue mb-6 text-center">Pilares de Governança Corporativa</h3>
+    <p class="text-gray-600 text-center mb-8">Uma governança corporativa robusta deve se basear nos pilares mínimos para garantir uma boa gestão</p>
+    
+    <div class="flex flex-wrap justify-center items-center gap-4 max-w-6xl mx-auto">
+        <!-- Pilar 1 -->
+        <div class="puzzle-piece bg-blue-100" style="background-color: #E8F4F8;">
+            <h4 class="font-bold text-peers-blue text-sm mb-2">Ferramentas de integridade corporativa</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
+                <li>• Promover cultura ética</li>
+                <li>• Evitar conflitos de interesse</li>
+                <li>• Manter coerência entre discurso e ação</li>
+            </ul>
+        </div>
+        
+        <!-- Pilar 2 -->
+        <div class="puzzle-piece" style="background-color: #B5D5E0;">
+            <h4 class="font-bold text-peers-blue text-sm mb-2">Transparência além do discurso</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
+                <li>• Disponibilizar informações verdadeiras</li>
+                <li>• Informações devem contemplar fatores ambientais e sociais</li>
+                <li>• Promover ambiente de confiança</li>
+            </ul>
+        </div>
+        
+        <!-- Pilar 3 -->
+        <div class="puzzle-piece bg-peers-lime">
+            <h4 class="font-bold text-peers-blue text-sm mb-2">Equidade aos stakeholders</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
+                <li>• Tratar todos os sócios e partes interessadas de forma justa</li>
+                <li>• Equidade deve levar em conta diversidade e as demandas de cada perfil</li>
+            </ul>
+        </div>
+        
+        <!-- Pilar 4 -->
+        <div class="puzzle-piece" style="background-color: #6B7280;">
+            <h4 class="font-bold text-white text-sm mb-2">Accountability nas decisões</h4>
+            <ul class="text-xs text-gray-200 space-y-1">
+                <li>• Desempenhar funções com diligência</li>
+                <li>• Assumir responsabilidade pelas consequências</li>
+                <li>• Prestar contas de forma clara e tempestiva</li>
+            </ul>
+        </div>
+        
+        <!-- Pilar 5 -->
+        <div class="puzzle-piece" style="background-color: #F0FD4C;">
+            <h4 class="font-bold text-peers-blue text-sm mb-2">Sustentabilidade e continuidade do negócio</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
+                <li>• Zelar pela viabilidade econômico-financeira</li>
+                <li>• Reduzir externalidades negativas</li>
+                <li>• Considerar capitais financeiros, humanos, sociais e naturais</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
             <!-- Detailed Scores by Principle -->
             <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -615,7 +561,7 @@
         const assessmentData = {
             title: "Assessment de Governança Corporativa",
             principles: {
-                "Princípio 1: Transparência além do discurso": {
+                "Princípio 1: Transparência além do discursos": {
                     questions: [
                         {
                             text: "Nossa organização divulga informações financeiras e não financeiras de forma clara, completa e acessível a todas as partes interessadas?",
@@ -666,7 +612,7 @@
                         ]
                     }
                 },
-                "Princípio 2: Equidade aos stakeholders": {
+                "Princípio 2: Equidade stakeholders": {
                     questions: [
                         {
                             text: "Nossa organização garante tratamento justo e igualitário a todos os acionistas?",
@@ -819,7 +765,7 @@
                         ]
                     }
                 },
-                "Princípio 5: Sustentabilidade e continuidade do negócio": {
+                "Princípio 5: Sustentabilidade e cont do negócio": {
                     questions: [
                         {
                             text: "A organização considera impactos ESG nas decisões estratégicas?",
@@ -1242,81 +1188,18 @@ function selectOption(principle, questionIndex, level) {
                 window.scrollTo(0, 0);
         }
 
-                function generateReport(userData = null) {
-            if (userData && userData.company) {
-                document.getElementById('companyName').textContent = userData.company;
-            }
-            
-            document.getElementById('assessmentQuestions').classList.add('hidden');
-            document.getElementById('progressIndicator').classList.add('hidden');
-            document.getElementById('dataCaptureSection').classList.add('hidden');
-            document.getElementById('reportSection').classList.remove('hidden');
-            
-            const principleScores = {};
-            let totalScore = 0;
-            let totalResponses = 0;
-            
-            principleKeys.forEach(principle => {
-                const principleData = assessmentData.principles[principle];
-                let principleSum = 0;
-                let principleCount = 0;
-                
-                principleData.questions.forEach((_, qIndex) => {
-                    const questionKey = `${principle}_Q${qIndex}`;
-                    if (responses[questionKey]) {
-                        principleSum += responses[questionKey];
-                        principleCount++;
-                        totalScore += responses[questionKey];
-                        totalResponses++;
-                    }
-                });
-                
-                if (principleCount > 0) {
-                    principleScores[principle] = principleSum / principleCount;
-                }
-            });
-            
-            const overallScore = totalResponses > 0 ? totalScore / totalResponses : 0;
-            
-            // Display overall score
-            document.getElementById('overallScore').textContent = overallScore.toFixed(1);
-            document.getElementById('overallLevel').textContent = `Nível: ${maturityLevels[Math.round(overallScore)].name}`;
-            
-            // Update thermometer
-            const percentage = ((overallScore - 1) / 4) * 100;
-            const indicator = document.getElementById('scoreIndicator');
-            indicator.style.left = `${percentage}%`;
-            document.getElementById('scoreValue').textContent = overallScore.toFixed(1);
-            
-            // Create radar chart
-            createRadarChart(principleScores);
-            
-            // Display principle scores
-            displayPrincipleScores(principleScores);
-            
-            // Generate recommendations
-            generateRecommendations(principleScores);
-            
-            window.scrollTo(0, 0);
-        }
-
-        function generateReport2(userData = null) 
-        {
+        function generateReport(userData = null) {
 
                 if (userData && userData.company) {
-                     const reportTitle = document.querySelector('#reportSection h2');
-                            if (reportTitle) {
-                                reportTitle.innerHTML = `Relatório de Maturidade em Governança<br><span class="text-xl font-normal text-gray-600">${userData.company}</span>`;
-                            }
-                        }
+        const reportTitle = document.querySelector('#reportSection h2');
+        if (reportTitle) {
+            reportTitle.innerHTML = `Relatório de Maturidade em Governança<br><span class="text-xl font-normal text-gray-600">${userData.company}</span>`;
+        }
+    }
             document.getElementById('assessmentQuestions').classList.add('hidden');
             document.getElementById('progressIndicator').classList.add('hidden');
             document.getElementById('reportSection').classList.remove('hidden');
 
-            // Posicionar indicador do termômetro
-            const indicator = document.getElementById('scoreIndicator');
-            const percentage = ((overallScore - 1) / 4) * 100;
-            indicator.style.left = `${percentage}%`;
             
             // Calcular pontuações
             const principleScores = {};
@@ -1344,6 +1227,21 @@ function selectOption(principle, questionIndex, level) {
             });
             
             const overallScore = totalResponses > 0 ? totalScore / totalResponses : 0;
+
+// ADICIONAR APÓS LINHA 916 (depois de const overallScore = ...):
+            
+            // Posicionar indicador do termômetro com animação
+            const indicator = document.getElementById('scoreIndicator');
+            const indicatorValue = document.getElementById('indicatorValue');
+            const percentage = ((overallScore - 1) / 4) * 100;
+            
+            // Animar o indicador após um pequeno delay
+            setTimeout(() => {
+                indicator.style.left = `${percentage}%`;
+                if (indicatorValue) {
+                    indicatorValue.textContent = overallScore.toFixed(1);
+                }
+            }, 300);
             
             // Exibir pontuação geral
             document.getElementById('overallScore').textContent = overallScore.toFixed(1);
@@ -1523,8 +1421,56 @@ function selectOption(principle, questionIndex, level) {
             window.scrollTo(0, 0);
         }
 
+
+        // Função de máscara para WhatsApp
+function applyWhatsappMask(value) {
+    // Remove tudo que não é número
+    value = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos
+    value = value.substring(0, 11);
+    
+    // Aplica a máscara
+    if (value.length > 6) {
+        value = value.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    } else if (value.length > 2) {
+        value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+    } else if (value.length > 0) {
+        value = value.replace(/^(\d{0,2})/, '($1');
+    }
+    
+    return value;
+}
+
+// Event listener para aplicar máscara em tempo real
+document.addEventListener('DOMContentLoaded', function() {
+    const whatsappInput = document.getElementById('userWhatsapp');
+    if (whatsappInput) {
+        whatsappInput.addEventListener('input', function(e) {
+            e.target.value = applyWhatsappMask(e.target.value);
+        });
+        
+        // Previne caracteres não numéricos
+        whatsappInput.addEventListener('keypress', function(e) {
+            const char = String.fromCharCode(e.which);
+            if (!/[0-9]/.test(char) && e.which !== 8 && e.which !== 46) {
+                e.preventDefault();
+            }
+        });
+    }
+});
+
         // Processar formulário de dados
 document.addEventListener('DOMContentLoaded', function() {
+
+    
+        // Aplicar máscara no WhatsApp
+    const whatsappInput = document.getElementById('userWhatsapp');
+    if (whatsappInput) {
+        whatsappInput.addEventListener('input', function(e) {
+            e.target.value = applyWhatsappMask(e.target.value);
+        });
+    }
     const dataForm = document.getElementById('dataForm');
     if (dataForm) {
         dataForm.addEventListener('submit', function(e) {
@@ -1535,6 +1481,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: document.getElementById('userName').value,
                 company: document.getElementById('userCompany').value,
                 email: document.getElementById('userEmail').value,
+                whatsapp: document.getElementById('userWhatsapp').value || '',
                 timestamp: new Date().toISOString()
             };
             

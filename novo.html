@@ -50,53 +50,6 @@
             color: white;
         }
         
-        .maturity-option {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .maturity-option:hover {
-            transform: scale(1.05);
-        }
-        
-        .maturity-option.selected {
-            background-color: var(--peers-lime);
-            color: var(--peers-blue);
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(225, 255, 0, 0.3);
-        }
-        
-        .principle-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--peers-blue);
-        }
-        
-        .question-card {
-            background: var(--peers-gray);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-                .btn-secondary:hover {
-            background-color: var(--peers-blue);
-            color: white;
-        }
-        
         /* Estilos para o termômetro */
         .thermometer-gradient {
             background: linear-gradient(to right, 
@@ -106,6 +59,25 @@
                 #84cc16 75%, 
                 #22c55e 100%
             );
+        }
+
+        /* Estilos para os pilares de governança */
+        .puzzle-piece {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .puzzle-piece:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        /* Layout responsivo para mobile */
+        @media (max-width: 768px) {
+            .puzzle-piece {
+                width: 100% !important;
+                margin-bottom: 1rem;
+            }
         }
         
         /* Estilos para os pilares de governança */
@@ -183,6 +155,7 @@
             margin-bottom: 1.5rem;
         }
         
+        
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
@@ -214,136 +187,13 @@
             body { background: white; }
             .principle-card { page-break-inside: avoid; }
         }
-        
-.info-icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: var(--peers-blue);
-    color: white;
-    text-align: center;
-    line-height: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-}
-
-.info-icon:hover {
-    background-color: var(--peers-lime);
-    color: var(--peers-blue);
-    transform: scale(1.2);
-}
-
-/* Tooltip para desktop */
-.info-tooltip {
-    position: absolute;
-    background: white;
-    border: 2px solid var(--peers-blue);
-    border-radius: 8px;
-    padding: 12px;
-    width: 250px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    z-index: 99999;
-    display: none;
-    font-size: 0.875rem;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: normal;
-    word-wrap: break-word;
-    line-height: 1.4;
-}
-
-.info-tooltip.show {
-    display: block;
-}
-
-/* Overlay para mobile */
-.tooltip-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-    display: none;
-}
-
-.tooltip-overlay.show {
-    display: block;
-}
-
-/* CORREÇÃO ESPECÍFICA PARA MOBILE */
-@media (max-width: 768px) {
-    .info-tooltip {
-        position: fixed !important;
-        width: 85vw !important;
-        max-width: 350px !important;
-        bottom: auto !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        z-index: 99999 !important;
-    }
-    
-    .maturity-option {
-        padding: 0.75rem !important;
-        min-height: 100px;
-    }
-        .maturity-option .font-semibold {
-        font-size: 0.7rem !important;
-        line-height: 1.2 !important;
-        text-align: center;
-        word-break: break-word;
-        hyphens: auto;
-    }
-    
-        .maturity-option .text-2xl {
-        font-size: 1.5rem !important;
-    }
-    .info-icon {
-        position: static !important;
-    }
-}
-        
-        .recommendation-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-left: 4px solid var(--peers-lime);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1rem;
-        }
-        
-        .level-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; }
-            .principle-card { page-break-inside: avoid; }
-        }
     </style>
 </head>
 <body class="bg-peers-gray">
-    <!-- Overlay para tooltips em mobile -->
-    <div class="tooltip-overlay" onclick="closeAllTooltips()"></div>
-    
     <!-- Header -->
     <header class="bg-peers-blue text-white py-6 px-8 shadow-lg">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <img src="https://d3fh32tca5cd7q.cloudfront.net/wp-content/uploads/2025/03/logo.svg" 
-                 alt="PEERS" 
-                 style="height: 45px; width: auto;">
+            <div class="text-3xl font-bold text-peers-lime">PEERS</div>
             <div class="text-sm">
                 <span class="text-peers-lime">Assessment</span> | Governança Corporativa
             </div>
@@ -425,55 +275,55 @@
             </div>
         </div>
 
-        <!-- Data Capture Form - ADICIONAR ESTE BLOCO -->
-<div id="dataCaptureSection" class="hidden">
-    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto">
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-peers-lime mb-4">
-                <svg class="w-8 h-8 text-peers-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+        <!-- Data Capture Form -->
+        <div id="dataCaptureSection" class="hidden">
+            <div class="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-peers-lime mb-4">
+                        <svg class="w-8 h-8 text-peers-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-peers-blue mb-2">Assessment Concluído!</h2>
+                    <p class="text-gray-600">Para gerar seu relatório personalizado, precisamos de algumas informações:</p>
+                </div>
+                
+                <form id="dataForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nome completo *</label>
+                        <input type="text" id="userName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" placeholder="Seu nome">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Empresa *</label>
+                        <input type="text" id="userCompany" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" placeholder="Nome da empresa">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">E-mail corporativo *</label>
+                        <input type="email" id="userEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" placeholder="seu@email.com">
+                    </div>
+                    
+                    <div class="flex items-start mt-4">
+                        <input type="checkbox" id="consent" required class="mt-1 mr-2">
+                        <label for="consent" class="text-sm text-gray-600">
+                            Concordo em compartilhar essas informações para receber o relatório personalizado.
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="w-full btn-primary py-4 rounded-lg font-semibold text-lg mt-6">
+                        Gerar Relatório Personalizado →
+                    </button>
+                </form>
             </div>
-            <h2 class="text-2xl font-bold text-peers-blue mb-2">Assessment Concluído!</h2>
-            <p class="text-gray-600">Para gerar seu relatório personalizado, precisamos de algumas informações:</p>
         </div>
-        
-        <form id="dataForm" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nome completo *</label>
-                <input type="text" id="userName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" placeholder="Seu nome">
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Empresa *</label>
-                <input type="text" id="userCompany" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" placeholder="Nome da empresa">
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">E-mail corporativo *</label>
-                <input type="email" id="userEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent" placeholder="seu@email.com">
-            </div>
-            
-            <div class="flex items-start mt-4">
-                <input type="checkbox" id="consent" required class="mt-1 mr-2">
-                <label for="consent" class="text-sm text-gray-600">
-                    Concordo em compartilhar essas informações para receber o relatório personalizado.
-                </label>
-            </div>
-            
-            <button type="submit" class="w-full btn-primary py-4 rounded-lg font-semibold text-lg mt-6">
-                Gerar Relatório Personalizado →
-            </button>
-        </form>
-    </div>
-</div>
 
         <!-- Report Section -->
         <div id="reportSection" class="hidden">
             <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
                 <h2 class="text-3xl font-bold text-peers-blue mb-8 text-center">Relatório de Maturidade em Governança</h2>
+                <div id="companyName" class="text-xl text-gray-600 text-center mb-8"></div>
                 
-                <!-- Overall Score -->
                 <!-- Overall Score with Thermometer -->
                 <div class="bg-peers-gray rounded-2xl p-8 mb-8">
                     <h3 class="text-xl font-semibold text-peers-blue mb-6 text-center">Pontuação Geral</h3>
@@ -501,80 +351,71 @@
                     </div>
                 </div>
 
-                
-
-                <!-- Imagem de Governança Corporativa -->
-                <div class="my-8 text-center">
-                    <img src="/mnt/user-data/uploads/1758740929934_image.png" 
-                        alt="Pilares de Governança Corporativa" 
-                        class="max-w-full h-auto mx-auto rounded-lg shadow-lg"
-                        style="max-width: 800px;">
-                </div>
-
+<!-- Pilares de Governança Corporativa - Layout Quebra-Cabeça -->
+<div class="bg-white rounded-2xl p-8 mb-8">
+    <h3 class="text-2xl font-bold text-peers-blue mb-6 text-center">Pilares de Governança Corporativa</h3>
+    <p class="text-gray-600 text-center mb-8">Uma governança corporativa robusta deve se basear nos pilares mínimos para garantir uma boa gestão</p>
+    
+    <div class="max-w-6xl mx-auto">
+        <!-- Linha Superior - 2 pilares -->
+        <div class="flex flex-wrap justify-center gap-4 mb-4">
+            <!-- Pilar 1 -->
+            <div class="puzzle-piece p-6 rounded-xl shadow-md transition-transform hover:scale-105" style="background-color: #E8F4F8; width: 300px;">
+                <h4 class="font-bold text-peers-blue text-sm mb-2">Ferramentas de integridade corporativa</h4>
+                <ul class="text-xs text-gray-700 space-y-1">
+                    <li>• Promover cultura ética</li>
+                    <li>• Evitar conflitos de interesse</li>
+                    <li>• Manter coerência entre discurso e ação</li>
+                </ul>
             </div>
-
-                                <div class="text-center">
-                        <div id="overallScore" class="text-5xl font-bold text-peers-blue mb-2"></div>
-                        <div id="overallLevel" class="text-lg text-gray-600"></div>
-                    </div>
-                </div>
-
-                <!-- Pilares de Governança Section -->
-                <div class="bg-white rounded-2xl p-8 mb-8">
-                    <h3 class="text-2xl font-bold text-peers-blue mb-6 text-center">Pilares de Governança Corporativa</h3>
-                    <p class="text-gray-600 text-center mb-8">Uma governança corporativa robusta deve se basear nos pilares mínimos para garantir uma boa gestão</p>
-                    
-                    <div class="flex flex-wrap justify-center items-center gap-4 max-w-6xl mx-auto">
-                        <!-- Pilar 1 -->
-                        <div class="puzzle-piece bg-blue-100" style="background-color: #E8F4F8;">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Ferramentas de integridade corporativa</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Promover cultura ética</li>
-                                <li>• Evitar conflitos de interesse</li>
-                                <li>• Manter coerência entre discurso e ação</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 2 -->
-                        <div class="puzzle-piece" style="background-color: #B5D5E0;">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Transparência além do discurso</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Disponibilizar informações verdadeiras</li>
-                                <li>• Informações devem contemplar fatores ambientais e sociais</li>
-                                <li>• Promover ambiente de confiança</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 3 -->
-                        <div class="puzzle-piece bg-peers-lime">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Equidade aos stakeholders</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Tratar todos os sócios e partes interessadas de forma justa</li>
-                                <li>• Equidade deve levar em conta diversidade e as demandas de cada perfil</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 4 -->
-                        <div class="puzzle-piece" style="background-color: #6B7280;">
-                            <h4 class="font-bold text-white text-sm mb-2">Accountability nas decisões</h4>
-                            <ul class="text-xs text-gray-200 space-y-1">
-                                <li>• Desempenhar funções com diligência</li>
-                                <li>• Assumir responsabilidade pelas consequências</li>
-                                <li>• Prestar contas de forma clara e tempestiva</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Pilar 5 -->
-                        <div class="puzzle-piece" style="background-color: #F0FD4C;">
-                            <h4 class="font-bold text-peers-blue text-sm mb-2">Sustentabilidade e continuidade do negócio</h4>
-                            <ul class="text-xs text-gray-700 space-y-1">
-                                <li>• Zelar pela viabilidade econômico-financeira</li>
-                                <li>• Reduzir externalidades negativas</li>
-                                <li>• Considerar capitais financeiros, humanos, sociais e naturais</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            
+            <!-- Pilar 2 -->
+            <div class="puzzle-piece p-6 rounded-xl shadow-md transition-transform hover:scale-105" style="background-color: #B5D5E0; width: 300px;">
+                <h4 class="font-bold text-peers-blue text-sm mb-2">Transparência além do discurso</h4>
+                <ul class="text-xs text-gray-700 space-y-1">
+                    <li>• Disponibilizar informações verdadeiras</li>
+                    <li>• Informações devem contemplar fatores ambientais e sociais</li>
+                    <li>• Promover ambiente de confiança</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Linha do Meio - 2 pilares -->
+        <div class="flex flex-wrap justify-center gap-4 mb-4">
+            <!-- Pilar 3 -->
+            <div class="puzzle-piece p-6 rounded-xl shadow-md transition-transform hover:scale-105 bg-peers-lime" style="width: 300px;">
+                <h4 class="font-bold text-peers-blue text-sm mb-2">Equidade aos stakeholders</h4>
+                <ul class="text-xs text-gray-700 space-y-1">
+                    <li>• Tratar todos os sócios e partes interessadas de forma justa</li>
+                    <li>• Equidade deve levar em conta diversidade e as demandas de cada perfil</li>
+                </ul>
+            </div>
+            
+            <!-- Pilar 4 -->
+            <div class="puzzle-piece p-6 rounded-xl shadow-md transition-transform hover:scale-105" style="background-color: #6B7280; width: 300px;">
+                <h4 class="font-bold text-white text-sm mb-2">Accountability nas decisões</h4>
+                <ul class="text-xs text-gray-200 space-y-1">
+                    <li>• Desempenhar funções com diligência</li>
+                    <li>• Assumir responsabilidade pelas consequências</li>
+                    <li>• Prestar contas de forma clara e tempestiva</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Linha Inferior - 1 pilar centralizado -->
+        <div class="flex justify-center">
+            <!-- Pilar 5 -->
+            <div class="puzzle-piece p-6 rounded-xl shadow-md transition-transform hover:scale-105" style="background-color: #F0FD4C; width: 400px;">
+                <h4 class="font-bold text-peers-blue text-sm mb-2 text-center">Sustentabilidade e continuidade do negócio</h4>
+                <ul class="text-xs text-gray-700 space-y-1">
+                    <li>• Zelar pela viabilidade econômico-financeira</li>
+                    <li>• Reduzir externalidades negativas</li>
+                    <li>• Considerar capitais financeiros, humanos, sociais e naturais</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <!-- Radar Chart -->
                 <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
@@ -620,76 +461,76 @@
                         {
                             text: "Nossa organização divulga informações financeiras e não financeiras de forma clara, completa e acessível a todas as partes interessadas?",
                             levels: {
-                                1: "Não há divulgação estruturada dessas informações.",
-                                2: "Algumas informações são divulgadas, mas de forma pontual, incompleta ou sem clareza.",
-                                3: "Existe divulgação regular, mas nem sempre é completa, acessível ou padronizada.",
-                                4: "As informações são divulgadas de forma clara, completa e acessível a todas as partes interessadas, com consistência.",
-                                5: "A divulgação é clara, completa e acessível, com práticas adicionais de melhoria contínua."
+                                1: "Não há divulgação regular de informações.",
+                                2: "Divulgação limitada e pouco acessível.",
+                                3: "Divulgação parcial com alguns gaps importantes.",
+                                4: "Boa divulgação mas ainda pode melhorar em clareza ou abrangência.",
+                                5: "Excelência em transparência com informações completas e acessíveis."
                             }
                         },
                         {
-                            text: "Existe um sistema de gestão de solicitações de informações dos stakeholders?",
+                            text: "Informações divulgadas contemplam fatores ambientais, sociais e de governança além dos econômico-financeiros?",
                             levels: {
-                                1: "Não há sistema formal para atender solicitações.",
-                                2: "Atendimento pontual sem processo estruturado.",
-                                3: "Processo existe mas com limitações de prazo ou abrangência.",
-                                4: "Sistema eficiente com SLAs definidos e cumpridos.",
-                                5: "Sistema exemplar com transparência ativa e proatividade."
+                                1: "Foco exclusivo em informações financeiras.",
+                                2: "Alguma menção a fatores ESG mas sem estrutura.",
+                                3: "Divulgação ESG parcial sem métricas claras.",
+                                4: "Boa cobertura ESG com métricas e metas definidas.",
+                                5: "Relatório integrado exemplar com todos os capitais cobertos."
                             }
                         },
                         {
-                            text: "As decisões estratégicas são comunicadas de forma transparente?",
+                            text: "Existe um ambiente de confiança entre as partes interessadas promovido pela transparência?",
                             levels: {
-                                1: "Decisões não são comunicadas aos stakeholders.",
-                                2: "Algumas decisões são comunicadas, mas sem explicar os motivos ou processos.",
-                                3: "Decisões importantes são comunicadas, mas nem sempre com clareza sobre motivos e impactos.",
-                                4: "Decisões estratégicas são comunicadas de forma clara, explicando motivos e impactos esperados.",
-                                5: "Comunicação exemplar de decisões, com transparência total do processo e engajamento das partes."
+                                1: "Baixa confiança e comunicação deficiente.",
+                                2: "Confiança limitada com comunicação ocasional.",
+                                3: "Confiança moderada mas com espaço para melhorias.",
+                                4: "Boa confiança com comunicação regular e aberta.",
+                                5: "Excelente ambiente de confiança com diálogo contínuo e transparente."
                             }
                         }
                     ],
                     recommendations: {
                         low: [
-                            "Implementar política de transparência com definição clara de informações a serem divulgadas",
-                            "Criar canais formais de comunicação com stakeholders (portal, SAC, ouvidoria)",
-                            "Estabelecer calendário regular de divulgação de informações financeiras e não-financeiras"
+                            "Estabelecer política de divulgação de informações com calendário regular",
+                            "Criar portal de transparência no site institucional",
+                            "Implementar reuniões periódicas com stakeholders"
                         ],
                         medium: [
-                            "Aprimorar a qualidade e acessibilidade das informações divulgadas",
-                            "Implementar sistema de gestão de solicitações com SLAs definidos",
-                            "Desenvolver relatórios integrados seguindo padrões internacionais (GRI, SASB)"
+                            "Desenvolver relatório integrado seguindo padrões GRI ou SASB",
+                            "Implementar sistema de gestão de indicadores ESG",
+                            "Criar comitê de comunicação com stakeholders"
                         ],
                         high: [
-                            "Buscar certificações de transparência e aderir a índices de sustentabilidade",
-                            "Implementar práticas de transparência ativa com dashboards públicos",
-                            "Estabelecer programa de engajamento contínuo com stakeholders"
+                            "Buscar certificação B Corp ou similar",
+                            "Implementar blockchain para transparência de dados",
+                            "Desenvolver plataforma interativa de dados em tempo real"
                         ]
                     }
                 },
                 "Princípio 2: Equidade aos stakeholders": {
                     questions: [
                         {
-                            text: "Nossa organização garante tratamento justo e igualitário a todos os acionistas?",
+                            text: "Todos os acionistas e partes interessadas são tratados de forma justa e equitativa?",
                             levels: {
-                                1: "Não há políticas claras de equidade entre acionistas.",
-                                2: "Existem algumas práticas, mas não formalizadas ou consistentes.",
-                                3: "Políticas existem mas nem sempre são aplicadas uniformemente.",
-                                4: "Tratamento justo e igualitário é garantido com políticas claras e aplicadas.",
-                                5: "Práticas exemplares de equidade com mecanismos adicionais de proteção a minoritários."
+                                1: "Tratamento desigual evidente entre stakeholders.",
+                                2: "Algumas práticas de equidade mas inconsistentes.",
+                                3: "Tratamento geralmente justo mas com exceções.",
+                                4: "Boa equidade com políticas claras implementadas.",
+                                5: "Excelência em equidade com reconhecimento externo."
                             }
                         },
                         {
-                            text: "Existem políticas e práticas claras que asseguram a não discriminação e o respeito à diversidade?",
+                            text: "A diversidade é considerada e promovida em todos os níveis da organização?",
                             levels: {
-                                1: "Não há políticas de diversidade e inclusão.",
-                                2: "Iniciativas pontuais sem política estruturada.",
-                                3: "Políticas existem mas implementação é limitada.",
-                                4: "Programa robusto de D&I com métricas e accountability.",
-                                5: "Cultura exemplar de diversidade com reconhecimento externo."
+                                1: "Não há consideração sobre diversidade.",
+                                2: "Reconhecimento da importância mas sem ações concretas.",
+                                3: "Algumas iniciativas de diversidade em andamento.",
+                                4: "Programa robusto de diversidade e inclusão.",
+                                5: "Liderança em diversidade com resultados comprovados."
                             }
                         },
                         {
-                            text: "A remuneração e benefícios são equitativos e transparentes?",
+                            text: "Existe justiça e clareza no sistema de remuneração e benefícios?",
                             levels: {
                                 1: "Não há critérios claros ou transparência na remuneração.",
                                 2: "Critérios existem mas não são aplicados consistentemente.",
@@ -768,7 +609,7 @@
                         ]
                     }
                 },
-                "Princípio 4: Ferramentas de integridade Corporativa": {
+                "Princípio 4: Ferramentas de integridade corporativa": {
                     questions: [
                         {
                             text: "A organização possui um programa de compliance estruturado?",
@@ -886,6 +727,7 @@
         let principleKeys = [];
         let totalQuestions = 0;
         let answeredQuestions = 0;
+        let radarChartInstance = null;
 
         function startAssessment() {
             document.getElementById('welcomeScreen').classList.add('hidden');
@@ -899,7 +741,6 @@
             renderPrincipleQuestions();
         }
 
-        // MUDANÇA PRINCIPAL 1: Renderizar todas as perguntas de um princípio de uma vez
         function renderPrincipleQuestions() {
             const container = document.getElementById('questionsContainer');
             container.innerHTML = '';
@@ -907,7 +748,6 @@
             const principle = principleKeys[currentPrincipleIndex];
             const principleData = assessmentData.principles[principle];
             
-            // Card do Princípio
             const principleDiv = document.createElement('div');
             principleDiv.className = 'principle-card fade-in';
             
@@ -926,12 +766,10 @@
             
             principleDiv.appendChild(principleHeader);
             
-            // Renderizar TODAS as perguntas do princípio
             principleData.questions.forEach((question, qIndex) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-card';
                 
-                // Número da pergunta
                 const questionNumber = document.createElement('div');
                 questionNumber.className = 'text-sm font-semibold text-peers-blue mb-2';
                 questionNumber.textContent = `Pergunta ${qIndex + 1} de ${principleData.questions.length}`;
@@ -942,21 +780,16 @@
                 questionText.textContent = question.text;
                 questionDiv.appendChild(questionText);
                 
-                // Grid de opções de maturidade
                 const optionsGrid = document.createElement('div');
-                optionsGrid.className = 'grid grid-cols-2 md:grid-cols-5 gap-3';
+                optionsGrid.className = 'grid grid-cols-1 md:grid-cols-5 gap-4';
                 
                 for (let level = 1; level <= 5; level++) {
                     const optionDiv = document.createElement('div');
-                    optionDiv.className = 'maturity-option p-4 border-2 border-gray-200 rounded-lg text-center relative';
-                    optionDiv.style.borderColor = maturityLevels[level].color;
-
-
-                    
-                    // Verificar se já foi respondida
                     const questionKey = `${principle}_Q${qIndex}`;
-                                            optionDiv.setAttribute('data-question', questionKey);
-                        optionDiv.setAttribute('data-level', level);
+                    
+                    optionDiv.className = 'maturity-option border-2 border-gray-300 rounded-lg p-4 text-center hover:border-peers-lime cursor-pointer';
+                    optionDiv.style.minHeight = '120px';
+                    
                     if (responses[questionKey] === level) {
                         optionDiv.classList.add('selected');
                     }
@@ -967,57 +800,18 @@
                     levelNumber.textContent = level;
                     
                     const levelName = document.createElement('div');
-                    levelName.className = 'font-semibold text-sm mb-2';
-                    levelName.style.textAlign = 'center';
-                    levelName.style.wordBreak = 'break-word';
-                    levelName.style.lineHeight = '1.2';
+                    levelName.className = 'font-semibold mb-2 text-sm';
                     levelName.textContent = maturityLevels[level].name;
                     
-                    // Container para o ícone de informação
-                    const infoContainer = document.createElement('div');
-                    
-                    infoContainer.className = 'relative inline-block';
-                    
-                    const infoIcon = document.createElement('span');
-                    infoIcon.className = 'info-icon';
-                    infoIcon.innerHTML = 'i';
-                    
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'info-tooltip';
-                    tooltip.id = `tooltip_${principle}_Q${qIndex}_L${level}`;
-                    tooltip.textContent = question.levels[level];
-
-                    // Handler para mostrar tooltip
-infoIcon.onclick = (e) => {
-    e.stopPropagation();
-    toggleTooltip(tooltip.id);
-};
-
-infoContainer.appendChild(infoIcon);
-
-// MUDANÇA CRÍTICA: Adicionar tooltip ao BODY para mobile
-if (window.innerWidth <= 768) {
-    document.body.appendChild(tooltip);
-} else {
-    infoContainer.appendChild(tooltip);
-}
-                    
-                    // Handler melhorado para mobile
-                    infoIcon.onclick = (e) => {
-                        e.stopPropagation();
-                        toggleTooltip(tooltip.id);
-                    };
-                    
-                    infoContainer.appendChild(infoIcon);
-                    //document.body.appendChild(tooltip); // Adicionar tooltip ao body para melhor posicionamento
-                    infoContainer.appendChild(tooltip); // Adicionar ao container, NÃO ao body
+                    const levelDesc = document.createElement('div');
+                    levelDesc.className = 'text-xs text-gray-600';
+                    levelDesc.textContent = question.levels[level];
                     
                     optionDiv.appendChild(levelNumber);
                     optionDiv.appendChild(levelName);
-                    optionDiv.appendChild(infoContainer);
+                    optionDiv.appendChild(levelDesc);
                     
-                    // Click handler para selecionar opção
-                    optionDiv.onclick = () => selectOption(principle, qIndex, level);
+                    optionDiv.onclick = () => selectMaturity(principle, qIndex, level);
                     
                     optionsGrid.appendChild(optionDiv);
                 }
@@ -1031,139 +825,25 @@ if (window.innerWidth <= 768) {
             updateProgress();
         }
 
-        // MUDANÇA 2: Função melhorada para tooltips com suporte mobile
-function toggleTooltip(tooltipId) {
-    const tooltip = document.getElementById(tooltipId);
-    
-    // Fechar TODOS os outros tooltips primeiro
-    document.querySelectorAll('.info-tooltip.show').forEach(t => {
-        if (t.id !== tooltipId) {
-            t.classList.remove('show');
-        }
-    });
-    
-    // Toggle do atual
-    tooltip.classList.toggle('show');
-}
-
-        function closeAllTooltips() {
-            document.querySelectorAll('.info-tooltip').forEach(t => {
-                t.classList.remove('show');
-            });
-            document.querySelector('.tooltip-overlay').classList.remove('show');
+        function selectMaturity(principle, questionIndex, level) {
+            const questionKey = `${principle}_Q${questionIndex}`;
+            const wasAnswered = !responses[questionKey];
+            
+            responses[questionKey] = level;
+            
+            if (wasAnswered) {
+                answeredQuestions++;
+            }
+            
+            updateProgress();
+            
+            const options = document.querySelectorAll('.maturity-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            event.currentTarget.classList.add('selected');
         }
 
-let globalTooltip = null;
-
-function showTooltip(iconElement) {
-    // Criar tooltip se não existir
-    if (!globalTooltip) {
-        globalTooltip = document.createElement('div');
-        globalTooltip.className = 'info-tooltip';
-        document.body.appendChild(globalTooltip);
-    }
-    
-    // Pegar texto e posição
-    const text = iconElement.getAttribute('data-tooltip-text');
-    const rect = iconElement.getBoundingClientRect();
-    
-    // Se já está mostrando este tooltip, fechar
-    if (globalTooltip.classList.contains('show') && globalTooltip.textContent === text) {
-        globalTooltip.classList.remove('show');
-        return;
-    }
-    
-    // Atualizar conteúdo
-    globalTooltip.textContent = text;
-    
-    // Posicionar acima do ícone
-    globalTooltip.style.left = rect.left + (rect.width / 2) - 150 + 'px'; // Centralizar
-    globalTooltip.style.top = rect.top - 10 + 'px'; // Acima do ícone
-    globalTooltip.style.transform = 'translateY(-100%)';
-    
-    // Ajustar se sair da tela
-    setTimeout(() => {
-        const tooltipRect = globalTooltip.getBoundingClientRect();
-        if (tooltipRect.left < 10) {
-            globalTooltip.style.left = '10px';
-        }
-        if (tooltipRect.right > window.innerWidth - 10) {
-            globalTooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
-        }
-        if (tooltipRect.top < 10) {
-            globalTooltip.style.top = rect.bottom + 10 + 'px';
-            globalTooltip.style.transform = 'none';
-        }
-    }, 10);
-    
-    // Mostrar
-    globalTooltip.classList.add('show');
-}
-
-// Fechar tooltip ao clicar fora
-document.addEventListener('click', function(e) {
-    if (!e.target.classList.contains('info-icon') && globalTooltip) {
-        globalTooltip.classList.remove('show');
-    }
-});
-
-// Fechar ao fazer scroll
-document.addEventListener('scroll', function() {
-    if (globalTooltip) {
-        globalTooltip.classList.remove('show');
-    }
-});
-
-
-function selectOption(principle, questionIndex, level) {
-    const questionKey = `${principle}_Q${questionIndex}`;
-    const wasAnswered = responses[questionKey] !== undefined;
-    
-    responses[questionKey] = level;
-    
-    if (!wasAnswered) {
-        answeredQuestions++;
-    }
-    
-    // NÃO re-renderizar! Apenas atualizar visualmente
-    // Remover seleção anterior
-    document.querySelectorAll(`[data-question="${questionKey}"]`).forEach(el => {
-        el.classList.remove('selected');
-    });
-    
-    // Adicionar seleção atual
-    const selectedElement = document.querySelector(`[data-question="${questionKey}"][data-level="${level}"]`);
-    if (selectedElement) {
-        selectedElement.classList.add('selected');
-    }
-    
-    // Atualizar apenas a barra de progresso
-    updateProgress();
-}
-
-        // Navegação entre princípios (não mais entre perguntas individuais)
         function nextPrinciple() {
-            // Verificar se todas as perguntas do princípio atual foram respondidas
-            const principle = principleKeys[currentPrincipleIndex];
-            const principleData = assessmentData.principles[principle];
-            let allAnswered = true;
-            
-            for (let i = 0; i < principleData.questions.length; i++) {
-                const questionKey = `${principle}_Q${i}`;
-                if (!responses[questionKey]) {
-                    allAnswered = false;
-                    break;
-                }
-            }
-            
-            if (!allAnswered) {
-                alert ('Você não respondeu todas as perguntas deste princípio.');
-                return;
-                // if (!confirm('Você não respondeu todas as perguntas deste princípio. Deseja continuar?')) {
-                //     return;
-                // }
-            }
-            
             if (currentPrincipleIndex < principleKeys.length - 1) {
                 currentPrincipleIndex++;
                 renderPrincipleQuestions();
@@ -1186,14 +866,12 @@ function selectOption(principle, questionIndex, level) {
             const nextBtn = document.getElementById('nextBtn');
             const submitBtn = document.getElementById('submitBtn');
             
-            // Mostrar/esconder botão anterior
             if (currentPrincipleIndex === 0) {
                 prevBtn.classList.add('hidden');
             } else {
                 prevBtn.classList.remove('hidden');
             }
             
-            // Mostrar botão próximo ou concluir
             const isLastPrinciple = currentPrincipleIndex === principleKeys.length - 1;
             
             if (isLastPrinciple) {
@@ -1211,38 +889,20 @@ function selectOption(principle, questionIndex, level) {
             document.getElementById('progressText').textContent = `${Math.round(progress)}% - ${answeredQuestions} de ${totalQuestions} perguntas respondidas`;
         }
 
-        // Fechar tooltips ao clicar ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeAllTooltips();
-            }
-        });
-
-        function submitAssessment1() {
+        function submitAssessment() {
             if (answeredQuestions < totalQuestions) {
                 if (!confirm('Você não respondeu todas as perguntas. Deseja continuar mesmo assim?')) {
                     return;
                 }
             }
             
-            generateReport();
+            document.getElementById('assessmentQuestions').classList.add('hidden');
+            document.getElementById('progressIndicator').classList.add('hidden');
+            document.getElementById('dataCaptureSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
         }
 
-        function submitAssessment() {
-                if (answeredQuestions < totalQuestions) {
-                    if (!confirm('Você não respondeu todas as perguntas. Deseja continuar mesmo assim?')) {
-                        return;
-                    }
-                }
-                
-                // Mostrar formulário em vez de ir direto para o relatório
-                document.getElementById('assessmentQuestions').classList.add('hidden');
-                document.getElementById('progressIndicator').classList.add('hidden');
-                document.getElementById('dataCaptureSection').classList.remove('hidden');
-                window.scrollTo(0, 0);
-        }
-
-                function generateReport(userData = null) {
+        function generateReport(userData = null) {
             if (userData && userData.company) {
                 document.getElementById('companyName').textContent = userData.company;
             }
@@ -1300,93 +960,38 @@ function selectOption(principle, questionIndex, level) {
             window.scrollTo(0, 0);
         }
 
-        function generateReport2(userData = null) 
-        {
-
-                if (userData && userData.company) {
-                     const reportTitle = document.querySelector('#reportSection h2');
-                            if (reportTitle) {
-                                reportTitle.innerHTML = `Relatório de Maturidade em Governança<br><span class="text-xl font-normal text-gray-600">${userData.company}</span>`;
-                            }
-                        }
-            document.getElementById('assessmentQuestions').classList.add('hidden');
-            document.getElementById('progressIndicator').classList.add('hidden');
-            document.getElementById('reportSection').classList.remove('hidden');
-
-            // Posicionar indicador do termômetro
-            const indicator = document.getElementById('scoreIndicator');
-            const percentage = ((overallScore - 1) / 4) * 100;
-            indicator.style.left = `${percentage}%`;
-            
-            // Calcular pontuações
-            const principleScores = {};
-            let totalScore = 0;
-            let totalResponses = 0;
-            
-            principleKeys.forEach(principle => {
-                const principleData = assessmentData.principles[principle];
-                let principleSum = 0;
-                let principleCount = 0;
-                
-                principleData.questions.forEach((_, qIndex) => {
-                    const questionKey = `${principle}_Q${qIndex}`;
-                    if (responses[questionKey]) {
-                        principleSum += responses[questionKey];
-                        principleCount++;
-                        totalScore += responses[questionKey];
-                        totalResponses++;
-                    }
-                });
-                
-                if (principleCount > 0) {
-                    principleScores[principle] = principleSum / principleCount;
-                }
-            });
-            
-            const overallScore = totalResponses > 0 ? totalScore / totalResponses : 0;
-            
-            // Exibir pontuação geral
-            document.getElementById('overallScore').textContent = overallScore.toFixed(1);
-            document.getElementById('overallLevel').textContent = `Nível: ${maturityLevels[Math.round(overallScore)].name}`;
-            
-            // Criar gráfico radar
-            createRadarChart(principleScores);
-            
-            // Exibir pontuações por princípio
-            displayPrincipleScores(principleScores);
-            
-            // Gerar recomendações personalizadas
-            generateRecommendations(principleScores);
-            
-            window.scrollTo(0, 0);
-        }
-
         function createRadarChart(scores) {
             const ctx = document.getElementById('radarChart').getContext('2d');
-           // const labels = Object.keys(scores).map(key => key.split(':')[0]);
-
-           const labels = Object.keys(scores).map(key => {
-                const fullName = key.split(':')[1].trim();
-                return fullName;
+            
+            // Destroy existing chart if it exists
+            if (radarChartInstance) {
+                radarChartInstance.destroy();
+            }
+            
+            // Extract principle names without "Princípio X:"
+            const labels = Object.keys(scores).map(key => {
+                const parts = key.split(':');
+                return parts.length > 1 ? parts[1].trim() : key;
             });
-
+            
             const data = Object.values(scores);
             
-            new Chart(ctx, {
+            radarChartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: labels,
                     datasets: [{
                         label: 'Maturidade',
                         data: data,
-                       backgroundColor: 'rgba(216, 232, 238, 0.3)', // Serene Blue com transparência
-                       borderColor: '#011334', // Peers Blue
-                       pointBackgroundColor: '#E1FF00', // Peers Lime
-                       pointBorderColor: '#011334',
-                       pointHoverBackgroundColor: '#E1FF00',
-                       pointHoverBorderColor: '#011334',
-                       borderWidth: 2,
-                       pointBackgroundColor: '#011334'
+                        backgroundColor: 'rgba(216, 232, 238, 0.3)',
+                        borderColor: '#011334',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#E1FF00',
+                        pointBorderColor: '#011334',
+                        pointHoverBackgroundColor: '#E1FF00',
+                        pointHoverBorderColor: '#011334',
+                        pointRadius: 6,
+                        pointHoverRadius: 8
                     }]
                 },
                 options: {
@@ -1396,14 +1001,32 @@ function selectOption(principle, questionIndex, level) {
                         r: {
                             beginAtZero: true,
                             max: 5,
+                            min: 0,
                             ticks: {
-                                stepSize: 1
+                                stepSize: 1,
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 11,
+                                    weight: 'bold'
+                                },
+                                color: '#011334'
                             }
                         }
                     },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Pontuação: ${context.raw.toFixed(1)}`;
+                                }
+                            }
                         }
                     }
                 }
@@ -1434,7 +1057,6 @@ function selectOption(principle, questionIndex, level) {
                 header.appendChild(scoreValue);
                 scoreDiv.appendChild(header);
                 
-                // Barra de progresso
                 const progressBar = document.createElement('div');
                 progressBar.className = 'w-full bg-gray-200 rounded-full h-3';
                 
@@ -1523,35 +1145,25 @@ function selectOption(principle, questionIndex, level) {
             window.scrollTo(0, 0);
         }
 
-        // Processar formulário de dados
-document.addEventListener('DOMContentLoaded', function() {
-    const dataForm = document.getElementById('dataForm');
-    if (dataForm) {
-        dataForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Capturar dados
-            const userData = {
-                name: document.getElementById('userName').value,
-                company: document.getElementById('userCompany').value,
-                email: document.getElementById('userEmail').value,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Ocultar formulário e gerar relatório
-            document.getElementById('dataCaptureSection').classList.add('hidden');
-            generateReport(userData);
+        // Process data form
+        document.addEventListener('DOMContentLoaded', function() {
+            const dataForm = document.getElementById('dataForm');
+            if (dataForm) {
+                dataForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const userData = {
+                        name: document.getElementById('userName').value,
+                        company: document.getElementById('userCompany').value,
+                        email: document.getElementById('userEmail').value,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    document.getElementById('dataCaptureSection').classList.add('hidden');
+                    generateReport(userData);
+                });
+            }
         });
-    }
-});
-document.addEventListener('click', function(e) {
-    // Se não clicou no ícone info
-    if (!e.target.classList.contains('info-icon')) {
-        document.querySelectorAll('.info-tooltip.show').forEach(t => {
-            t.classList.remove('show');
-        });
-    }
-});
     </script>
 </body>
 </html>
