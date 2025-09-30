@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment ESG - Jornada Net Zero | PEERS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --peers-blue: #011334;
+            --peers-lime: #E1FF00;
+            --peers-gray: #F2F2F2;
+            --peers-serene: #D8E8EE;
+            --peers-green: #00B388;
+            --peers-dark-gray: #4A5568;
+        }
+        
+        /* Classes customizadas PEERS */
+        .bg-peers-blue { background-color: var(--peers-blue); }
+        .bg-peers-lime { background-color: var(--peers-lime); }
+        .bg-peers-gray { background-color: var(--peers-gray); }
+        .bg-peers-serene { background-color: var(--peers-serene); }
+        .text-peers-blue { color: var(--peers-blue); }
+        .text-peers-lime { color: var(--peers-lime); }
+        .text-peers-green { color: var(--peers-green); }
+        .border-peers-blue { border-color: var(--peers-blue); }
+        .border-peers-lime { border-color: var(--peers-lime); }
+        
+        /* Botões primários e secundários */
+        .btn-primary {
+            background-color: var(--peers-lime);
+            color: var(--peers-blue);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(225, 255, 0, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--peers-blue);
+            border: 2px solid var(--peers-blue);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--peers-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Animações suaves */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Cards dos elos da jornada */
+        .journey-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--peers-green);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .journey-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--peers-lime) 0%, transparent 100%);
+            opacity: 0.1;
+            border-radius: 0 0 0 100%;
+        }
+        
+        .journey-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        /* Opções de maturidade */
+        .maturity-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            background: white;
+            border: 2px solid #E5E7EB;
+            overflow: hidden;
+        }
+        
+        .maturity-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--peers-lime) 0%, rgba(225,255,0,0.1) 100%);
+            transition: width 0.3s ease;
+            z-index: 0;
+        }
+        
+        .maturity-option:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .maturity-option:hover::before {
+            width: 100%;
+        }
+        
+        .maturity-option.selected {
+            background: var(--peers-lime);
+            color: var(--peers-blue);
+            font-weight: 600;
+            border-color: var(--peers-blue);
+            box-shadow: 0 6px 20px rgba(225, 255, 0, 0.5);
+        }
+        
+        .maturity-option.selected::before {
+            width: 100%;
+        }
+        
+        .maturity-option > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Question cards */
+        .question-card {
+            background: linear-gradient(135deg, #FAFBFC 0%, white 100%);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s ease;
+        }
+        
+        .question-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        /* Progress steps */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 0 2rem;
+        }
+        
+        .step {
+            flex: 1;
+            position: relative;
+            text-align: center;
+        }
+        
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -50%;
+            right: 50%;
+            height: 2px;
+            background: #E5E7EB;
+            z-index: 0;
+        }
+        
+        .step:first-child::before {
+            display: none;
+        }
+        
+        .step.active::before,
+        .step.completed::before {
+            background: var(--peers-green);
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #E5E7EB;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-circle {
+            background: var(--peers-lime);
+            border-color: var(--peers-blue);
+            color: var(--peers-blue);
+            transform: scale(1.1);
+        }
+        
+        .step.completed .step-circle {
+            background: var(--peers-green);
+            border-color: var(--peers-green);
+            color: white;
+        }
+        
+        .step-label {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #6B7280;
+            font-weight: 500;
+        }
+        
+        .step.active .step-label {
+            color: var(--peers-blue);
+            font-weight: 600;
+        }
+        
+        /* Tooltip melhorado */
+        .tooltip {
+            position: absolute;
+            background: white;
+            border: 2px solid var(--peers-blue);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            min-width: 250px;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--peers-blue);
+        }
+        
+        .tooltip.show {
+            display: block;
+            animation: tooltipFade 0.3s ease;
+        }
+        
+        @keyframes tooltipFade {
+            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        /* Info icon */
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--peers-blue);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .info-icon:hover {
+            background: var(--peers-lime);
+            color: var(--peers-blue);
+            transform: scale(1.2);
+        }
+        
+        /* Score visualization */
+        .score-card {
+            background: linear-gradient(135deg, var(--peers-serene) 0%, white 100%);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--peers-lime) 0%, transparent 70%);
+            opacity: 0.05;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .score-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--peers-blue);
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Recommendation cards */
+        .recommendation-card {
+            background: white;
+            border-left: 4px solid var(--peers-lime);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .recommendation-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .priority-high {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        
+        .priority-medium {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        
+        .priority-low {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        
+        /* Journey path visualization */
+        .journey-path {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(90deg, var(--peers-serene) 0%, white 100%);
+            border-radius: 1.5rem;
+            position: relative;
+        }
+        
+        .journey-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .journey-node.completed {
+            background: var(--peers-green);
+            border-color: var(--peers-green);
+            color: white;
+        }
+        
+        .journey-node.current {
+            background: var(--peers-lime);
+            border-color: var(--peers-blue);
+            color: var(--peers-blue);
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(225,255,0,0.6);
+        }
+        
+        .journey-line {
+            position: absolute;
+            top: 50%;
+            left: 60px;
+            right: 60px;
+            height: 3px;
+            background: #E5E7EB;
+            z-index: 1;
+        }
+        
+        .journey-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--peers-green) 0%, var(--peers-lime) 100%);
+            transition: width 0.5s ease;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .step-label {
+                font-size: 0.65rem;
+            }
+            
+            .journey-node {
+                width: 40px;
+                height: 40px;
+                font-size: 0.875rem;
+            }
+            
+            .maturity-option {
+                padding: 0.75rem;
+            }
+            
+            .question-card {
+                padding: 1.5rem;
+            }
+            
+            .score-number {
+                font-size: 3rem;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .journey-card { page-break-inside: avoid; }
+            .question-card { page-break-inside: avoid; }
+        }
+        
+        /* Loading animation */
+        .loading-spinner {
+            border: 3px solid var(--peers-gray);
+            border-top: 3px solid var(--peers-lime);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--peers-gray);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--peers-blue);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--peers-green);
+        }
+    </style>
+</head>
+<body class="bg-peers-gray">
+    <!-- Header -->
+    <header class="bg-peers-blue text-white py-6 px-8 shadow-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="https://d3fh32tca5cd7q.cloudfront.net/wp-content/uploads/2025/03/logo.svg" 
+                     alt="PEERS" 
+                     style="height: 45px; width: auto;">
+                <div class="hidden md:block h-8 w-px bg-peers-lime opacity-50"></div>
+                <div class="hidden md:block">
+                    <p class="text-xs text-peers-lime">Assessment ESG</p>
+                    <p class="text-sm font-semibold">Jornada Net Zero</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:block text-right">
+                    <p class="text-xs text-gray-300">Seu progresso</p>
+                    <p class="text-sm font-semibold"><span id="headerProgress">0</span>%</p>
+                </div>
+                <button id="saveProgressBtn" class="btn-secondary py-2 px-4 rounded-lg text-sm hidden">
+                    💾 Salvar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+        <!-- Progress Bar Global -->
+        <div id="globalProgress" class="mb-8 hidden">
+            <div class="bg-white rounded-xl p-4 shadow-md">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-semibold text-peers-blue">Progresso Geral</span>
+                    <span id="progressText" class="text-sm text-gray-600">0% completo</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progressBar" class="bg-gradient-to-r from-peers-green to-peers-lime h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="fade-in">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-peers-blue to-peers-green p-12 text-white text-center">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-peers-lime mb-6">
+                        <svg class="w-12 h-12 text-peers-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-bold mb-4">Assessment de Maturidade ESG</h1>
+                    <p class="text-xl text-peers-lime font-semibold mb-2">Jornada Net Zero</p>
+                    <p class="text-lg opacity-90">Avalie o nível de maturidade da sua organização na jornada de descarbonização</p>
+                </div>
+                
+                <div class="p-8 md:p-12">
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-peers-serene rounded-xl p-6">
+                            <h3 class="font-bold text-peers-blue mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-peers-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                                </svg>
+                                O que será avaliado
+                            </h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-green mt-1">→</span>
+                                    <span>Identificação de necessidades e impactos ambientais</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-green mt-1">→</span>
+                                    <span>Inventário de emissões de gases de efeito estufa</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-green mt-1">→</span>
+                                    <span>Análise e gestão de emissões</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-green mt-1">→</span>
+                                    <span>Planos de mitigação e adaptação climática</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-green mt-1">→</span>
+                                    <span>Certificações e validações externas</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-green mt-1">→</span>
+                                    <span>Estratégias de compensação e neutralização</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <h3 class="font-bold text-peers-blue mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-peers-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                Como funciona
+                            </h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-lime mt-1">•</span>
+                                    <span><strong>25 perguntas</strong> divididas em 6 pilares da jornada ESG</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-lime mt-1">•</span>
+                                    <span><strong>Escala de maturidade</strong> de 1 a 5 níveis</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-lime mt-1">•</span>
+                                    <span><strong>Tempo estimado:</strong> 15-20 minutos</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-lime mt-1">•</span>
+                                    <span><strong>Relatório personalizado</strong> com recomendações específicas</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-lime mt-1">•</span>
+                                    <span><strong>Plano de ação</strong> prioritizado por pilar</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-peers-lime mt-1">•</span>
+                                    <span><strong>Benchmark</strong> com melhores práticas do mercado</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Question -->
+                    <div class="bg-white border-2 border-peers-blue border-opacity-20 rounded-xl p-6 mb-8">
+                        <h3 class="font-bold text-peers-blue mb-4">Antes de começar, nos ajude a personalizar seu assessment:</h3>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Qual é o tipo de indústria da sua empresa?
+                        </label>
+                        <select id="industryType" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-peers-lime focus:ring-2 focus:ring-peers-lime focus:ring-opacity-20 transition-all">
+                            <option value="">Selecione uma opção...</option>
+                            <option value="emissoras">Indústrias Emissoras e de Transformação</option>
+                            <option value="infraestrutura">Serviços de Infraestrutura e Logística</option>
+                            <option value="comercio">Comércio e Bens de Consumo</option>
+                            <option value="agro">Agro e Uso da Terra</option>
+                            <option value="servicos">Educação, Saúde e Serviços Públicos</option>
+                            <option value="financeiro">Setor Financeiro e de Crédito</option>
+                        </select>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button onclick="startAssessment()" class="btn-primary py-4 px-12 rounded-xl text-lg inline-flex items-center gap-3">
+                            <span>Iniciar Assessment</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </button>
+                        <p class="text-sm text-gray-500 mt-4">Suas respostas são confidenciais e serão usadas apenas para gerar seu relatório personalizado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Questions -->
+        <div id="assessmentQuestions" class="hidden">
+            <!-- Journey Progress Steps -->
+            <div class="step-indicator mb-8" id="stepIndicator"></div>
+            
+            <!-- Questions Container -->
+            <div id="questionsContainer"></div>
+            
+            <!-- Navigation -->
+            <div class="flex justify-between items-center mt-8 gap-4">
+                <button id="prevBtn" onclick="previousElo()" class="btn-secondary py-3 px-6 rounded-lg flex items-center gap-2 hidden">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Anterior</span>
+                </button>
+                
+                <div class="flex-1 text-center">
+                    <span id="questionCounter" class="text-sm text-gray-600"></span>
+                </div>
+                
+                <button id="nextBtn" onclick="nextElo()" class="btn-primary py-3 px-6 rounded-lg flex items-center gap-2">
+                    <span class="hidden sm:inline">Próximo</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                
+                <button id="submitBtn" onclick="submitAssessment()" class="btn-primary py-3 px-8 rounded-lg hidden flex items-center gap-2">
+                    <span>Concluir Assessment</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Capture Form -->
+        <div id="dataCaptureSection" class="hidden">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl mx-auto fade-in">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-peers-lime mb-4">
+                        <svg class="w-10 h-10 text-peers-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-peers-blue mb-3">Parabéns! Assessment Concluído</h2>
+                    <p class="text-gray-600 text-lg">Para gerar seu relatório personalizado e receber recomendações específicas, precisamos de algumas informações:</p>
+                </div>
+                
+                <form id="dataForm" class="space-y-5">
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nome completo *</label>
+                            <input type="text" id="userName" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-peers-lime focus:ring-2 focus:ring-peers-lime focus:ring-opacity-20 transition-all" 
+                                   placeholder="Seu nome completo">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Cargo *</label>
+                            <input type="text" id="userRole" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-peers-lime focus:ring-2 focus:ring-peers-lime focus:ring-opacity-20 transition-all" 
+                                   placeholder="Seu cargo na empresa">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Empresa *</label>
+                        <input type="text" id="userCompany" required 
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-peers-lime focus:ring-2 focus:ring-peers-lime focus:ring-opacity-20 transition-all" 
+                               placeholder="Nome da empresa">
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">E-mail corporativo *</label>
+                            <input type="email" id="userEmail" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-peers-lime focus:ring-2 focus:ring-peers-lime focus:ring-opacity-20 transition-all" 
+                                   placeholder="email@empresa.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">WhatsApp</label>
+                            <input type="tel" id="userWhatsapp" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-peers-lime focus:ring-2 focus:ring-peers-lime focus:ring-opacity-20 transition-all" 
+                                   placeholder="(11) 99999-9999"
+                                   maxlength="15">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-peers-serene rounded-lg p-4">
+                        <div class="flex items-start">
+                            <input type="checkbox" id="consent" required class="mt-1 mr-3 w-4 h-4">
+                            <label for="consent" class="text-sm text-gray-700">
+                                Concordo em compartilhar essas informações para receber o relatório personalizado e autorizo o contato da PEERS para apresentação de soluções em ESG e sustentabilidade.
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="button" onclick="skipDataCapture()" class="flex-1 btn-secondary py-4 rounded-lg font-semibold">
+                            Pular esta etapa
+                        </button>
+                        <button type="submit" class="flex-1 btn-primary py-4 rounded-lg font-semibold">
+                            Gerar Relatório Completo →
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Report Section -->
+        <div id="reportSection" class="hidden">
+            <!-- Report Header -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 text-center">
+                <h2 class="text-4xl font-bold text-peers-blue mb-4">Relatório de Maturidade ESG</h2>
+                <p class="text-xl text-gray-600" id="reportCompany">Jornada Net Zero</p>
+                <p class="text-sm text-gray-500 mt-2">Gerado em <span id="reportDate"></span></p>
+            </div>
+            
+            <!-- Overall Score -->
+            <div class="grid lg:grid-cols-3 gap-8 mb-8">
+                <div class="lg:col-span-1">
+                    <div class="score-card">
+                        <h3 class="text-lg font-bold text-peers-blue mb-4">Pontuação Geral</h3>
+                        <div class="score-number" id="overallScore">0.0</div>
+                        <div class="text-lg font-semibold text-gray-600 mt-2" id="overallLevel">-</div>
+                        <div class="mt-6 px-4">
+                            <div class="flex justify-between text-xs text-gray-600 mb-2">
+                                <span>Iniciante</span>
+                                <span>Excelência</span>
+                            </div>
+                            <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="scoreBar" class="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 transition-all duration-1000" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl p-6 shadow-lg h-full">
+                        <h3 class="text-lg font-bold text-peers-blue mb-4">Performance por Pilar</h3>
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Journey Progress Visualization -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <h3 class="text-2xl font-bold text-peers-blue mb-6">Sua Jornada Net Zero</h3>
+                <div class="journey-path">
+                    <div class="journey-line">
+                        <div class="journey-progress" id="journeyProgress" style="width: 0%"></div>
+                    </div>
+                    <div id="journeyNodes" class="flex justify-between relative z-10"></div>
+                </div>
+                <div id="journeyLabels" class="flex justify-between mt-4 px-8"></div>
+            </div>
+            
+            <!-- Detailed Analysis -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <h3 class="text-2xl font-bold text-peers-blue mb-6">Análise Detalhada por Pilar</h3>
+                <div id="detailedAnalysis"></div>
+            </div>
+            
+            <!-- Recommendations -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <h3 class="text-2xl font-bold text-peers-blue mb-6">Plano de Ação Prioritizado</h3>
+                <p class="text-gray-600 mb-6">Com base em sua avaliação, estas são as ações recomendadas para evolução da maturidade ESG:</p>
+                <div id="recommendationsContainer"></div>
+            </div>
+            
+            <!-- Next Steps -->
+            <div class="bg-gradient-to-r from-peers-blue to-peers-green rounded-2xl shadow-xl p-8 text-white text-center">
+                <h3 class="text-2xl font-bold mb-4">Próximos Passos</h3>
+                <p class="text-lg mb-6">A PEERS está pronta para apoiar sua empresa na jornada de transformação ESG</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="window.print()" class="btn-secondary py-3 px-8 rounded-lg">
+                        📄 Imprimir Relatório
+                    </button>
+                    <button onclick="downloadReport()" class="bg-peers-lime text-peers-blue py-3 px-8 rounded-lg font-semibold hover:transform hover:scale-105 transition-all">
+                        📊 Baixar Relatório Completo
+                    </button>
+                    <button onclick="scheduleConsulting()" class="bg-white text-peers-blue py-3 px-8 rounded-lg font-semibold hover:transform hover:scale-105 transition-all">
+                        📞 Agendar Consultoria
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-peers-blue text-white py-8 px-8 mt-12 no-print">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <img src="https://d3fh32tca5cd7q.cloudfront.net/wp-content/uploads/2025/03/logo.svg" 
+                         alt="PEERS" 
+                         style="height: 35px; width: auto;">
+                    <p class="text-sm text-gray-300 mt-2">Transformando negócios através da sustentabilidade</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-sm text-gray-300">© 2025 PEERS Consulting + Technology</p>
+                    <p class="text-xs text-gray-400 mt-1">Todos os direitos reservados</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Assessment Data Structure
+        const assessmentData = {
+            "title": "Assessment de Maturidade ESG - Jornada Net Zero",
+            "subtitle": "Avalie o nível de maturidade da sua organização na jornada de descarbonização",
+            "elos": {
+                "1. Identifica necessidade": {
+                    "questions": [
+                        {
+                            "id": 1,
+                            "text": "Como sua empresa identifica fontes poluidoras na operação e na sua cadeia de suprimentos?",
+                            "levels": {
+                                1: "Não fazemos nenhuma identificação das fontes poluidoras",
+                                2: "Fazemos de forma superficial e pontual, sem regularidade ou método estruturado",
+                                3: "Identificamos principais fontes internas, mas ainda sem olhar a cadeia completa",
+                                4: "Temos processo estruturado para mapear fontes internas e começamos a mapear fornecedores",
+                                5: "Processo completo e contínuo de identificação em toda cadeia com métricas e acompanhamento"
+                            },
+                            "recommendations": {
+                                1: "Inicie com um diagnóstico das principais fontes de emissão em suas operações diretas",
+                                2: "Mapeie os principais parceiros da cadeia e identifique potenciais impactos",
+                                3: "Formalize essas ações em programas estruturados com responsáveis definidos",
+                                4: "Expanda os programas para outras partes da cadeia e implemente métricas de acompanhamento",
+                                5: "Continue liderando com transparência, inovação e melhoria contínua nos processos"
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "text": "Sua empresa realiza diagnóstico dos impactos socioambientais gerados pelas atividades?",
+                            "levels": {
+                                1: "Não realizamos nenhum diagnóstico de impactos socioambientais",
+                                2: "Fazemos análises pontuais quando exigido por lei ou cliente",
+                                3: "Temos diagnóstico básico dos principais impactos mas sem regularidade",
+                                4: "Diagnóstico estruturado e periódico com planos de ação definidos",
+                                5: "Sistema completo de gestão de impactos integrado à estratégia do negócio"
+                            },
+                            "recommendations": {
+                                1: "Inicie um diagnóstico básico para entender onde sua empresa gera impactos",
+                                2: "Formalize um levantamento estruturado das necessidades socioambientais",
+                                3: "Amplie os diagnósticos para outras áreas e considere impactos indiretos",
+                                4: "Atualize periodicamente os dados e use os resultados para decisões estratégicas",
+                                5: "Mantenha o processo ativo e alinhado às tendências e melhores práticas globais"
+                            }
+                        }
+                    ],
+                    "description": "Avalie como sua empresa identifica necessidades e impactos ESG"
+                },
+                "2. Inventário de emissões": {
+                    "questions": [
+                        {
+                            "id": 3,
+                            "text": "A empresa possui inventário de emissões de gases de efeito estufa (GEE)?",
+                            "levels": {
+                                1: "Não possuímos inventário de emissões",
+                                2: "Temos dados parciais ou estimativas básicas sem metodologia formal",
+                                3: "Inventário de escopo 1 e 2 com metodologia reconhecida",
+                                4: "Inventário completo (escopos 1, 2 e parcial do 3) verificado externamente",
+                                5: "Inventário completo de todos os escopos, verificado e publicado anualmente"
+                            },
+                            "recommendations": {
+                                1: "Comece com uma capacitação básica sobre o que é um inventário de GEE",
+                                2: "Atualize o inventário com base em metodologias reconhecidas como GHG Protocol",
+                                3: "Amplie o escopo do inventário para incluir fontes indiretas relevantes",
+                                4: "Aprofunde a análise dos dados e integre o inventário ao planejamento estratégico",
+                                5: "Continue liderando com transparência e inovação na gestão de carbono"
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "text": "Com que frequência o inventário é atualizado?",
+                            "levels": {
+                                1: "Não temos inventário ou nunca atualizamos",
+                                2: "Atualizamos eventualmente, sem periodicidade definida",
+                                3: "Atualizamos a cada 2-3 anos",
+                                4: "Atualizamos anualmente",
+                                5: "Monitoramento contínuo com atualizações trimestrais ou mensais"
+                            },
+                            "recommendations": {
+                                1: "Estabeleça um processo inicial de coleta de dados",
+                                2: "Defina uma periodicidade mínima anual para atualização",
+                                3: "Implemente processo anual com responsáveis definidos",
+                                4: "Aprimore o processo com ferramentas de automação",
+                                5: "Mantenha a excelência e compartilhe boas práticas com o setor"
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "text": "O inventário abrange quais escopos de emissão?",
+                            "levels": {
+                                1: "Não temos clareza sobre escopos ou não medimos",
+                                2: "Apenas escopo 1 (emissões diretas)",
+                                3: "Escopos 1 e 2 (diretas e energia comprada)",
+                                4: "Escopos 1, 2 e principais categorias do escopo 3",
+                                5: "Todos os escopos relevantes com análise detalhada da cadeia de valor"
+                            },
+                            "recommendations": {
+                                1: "Aprenda sobre os diferentes escopos e sua importância",
+                                2: "Expanda para incluir escopo 2 (energia elétrica)",
+                                3: "Mapeie as categorias mais relevantes do escopo 3",
+                                4: "Complete o mapeamento de toda cadeia de valor",
+                                5: "Use os dados para influenciar positivamente sua cadeia"
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "text": "O inventário é verificado por terceira parte independente?",
+                            "levels": {
+                                1: "Não há verificação externa",
+                                2: "Revisão interna apenas",
+                                3: "Verificação limitada por terceiros",
+                                4: "Verificação completa com asseguração razoável",
+                                5: "Verificação completa com certificação internacional"
+                            },
+                            "recommendations": {
+                                1: "Estabeleça processos internos de qualidade dos dados",
+                                2: "Busque uma verificação inicial por consultoria especializada",
+                                3: "Contrate verificação formal seguindo normas como ISO 14064-3",
+                                4: "Aprimore o nível de asseguração e transparência",
+                                5: "Mantenha padrão de excelência e apoie outros na jornada"
+                            }
+                        }
+                    ],
+                    "description": "Avalie a maturidade do inventário de emissões da sua empresa"
+                },
+                "3. Análise de emissões": {
+                    "questions": [
+                        {
+                            "id": 9,
+                            "text": "Como a empresa analisa e interpreta os dados de emissões?",
+                            "levels": {
+                                1: "Não fazemos análise dos dados de emissões",
+                                2: "Análise básica sem metodologia estruturada",
+                                3: "Análise periódica com identificação de hotspots",
+                                4: "Análise detalhada com benchmarking e tendências",
+                                5: "Analytics avançado com modelagem preditiva e cenários"
+                            },
+                            "recommendations": {
+                                1: "Comece identificando as principais fontes de emissão",
+                                2: "Estruture relatórios básicos de análise",
+                                3: "Implemente dashboards e indicadores-chave",
+                                4: "Use ferramentas avançadas de análise e benchmarking",
+                                5: "Lidere com inteligência de dados e compartilhe insights"
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "text": "A empresa estabeleceu metas de redução de emissões?",
+                            "levels": {
+                                1: "Não temos metas de redução",
+                                2: "Temos intenções mas sem metas formalizadas",
+                                3: "Metas internas de curto prazo",
+                                4: "Metas de curto e longo prazo alinhadas com ciência",
+                                5: "Metas validadas pela SBTi com compromisso Net Zero"
+                            },
+                            "recommendations": {
+                                1: "Defina uma primeira meta alcançável de redução",
+                                2: "Formalize metas com prazos e responsáveis",
+                                3: "Alinhe metas com a ciência climática (1.5°C)",
+                                4: "Submeta metas para validação externa (SBTi)",
+                                5: "Acelere a ambição e inspire o setor"
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "text": "Como são monitoradas as tendências de emissões?",
+                            "levels": {
+                                1: "Não monitoramos tendências",
+                                2: "Acompanhamento eventual sem sistematização",
+                                3: "Monitoramento anual com relatórios internos",
+                                4: "Monitoramento contínuo com KPIs e dashboards",
+                                5: "Sistema integrado de gestão com alertas e automação"
+                            },
+                            "recommendations": {
+                                1: "Estabeleça uma linha de base para comparação",
+                                2: "Crie relatórios periódicos de acompanhamento",
+                                3: "Implemente sistema de indicadores e metas",
+                                4: "Automatize coleta e análise de dados",
+                                5: "Use IA e analytics para otimização contínua"
+                            }
+                        },
+                        {
+                            "id": 13,
+                            "text": "A empresa comunica publicamente seus dados de emissões?",
+                            "levels": {
+                                1: "Não divulgamos dados de emissões",
+                                2: "Divulgação pontual quando solicitado",
+                                3: "Relatório anual com dados básicos",
+                                4: "Relatório completo seguindo padrões (GRI, CDP)",
+                                5: "Transparência total com dados em tempo real"
+                            },
+                            "recommendations": {
+                                1: "Prepare-se para começar a divulgação",
+                                2: "Publique primeiro relatório simplificado",
+                                3: "Adote padrões internacionais de reporte",
+                                4: "Busque reconhecimento e ratings ESG",
+                                5: "Seja referência em transparência climática"
+                            }
+                        },
+                        {
+                            "id": 14,
+                            "text": "Existe integração dos dados de carbono na tomada de decisão?",
+                            "levels": {
+                                1: "Não há integração com decisões de negócio",
+                                2: "Consideração pontual em alguns projetos",
+                                3: "Análise de carbono em projetos relevantes",
+                                4: "Carbono como critério em todas decisões estratégicas",
+                                5: "Precificação interna de carbono e governança climática"
+                            },
+                            "recommendations": {
+                                1: "Sensibilize liderança sobre importância do tema",
+                                2: "Inclua carbono em análises de investimento",
+                                3: "Crie comitê de sustentabilidade",
+                                4: "Implemente preço interno de carbono",
+                                5: "Integre clima em toda governança corporativa"
+                            }
+                        }
+                    ],
+                    "description": "Avalie como sua empresa analisa e utiliza dados de emissões"
+                },
+                "4. Planos de mitigação": {
+                    "questions": [
+                        {
+                            "id": 15,
+                            "text": "A empresa possui plano estruturado de redução de emissões?",
+                            "levels": {
+                                1: "Não temos plano de redução",
+                                2: "Ações isoladas sem plano formal",
+                                3: "Plano básico com algumas iniciativas",
+                                4: "Plano robusto com roadmap e investimentos definidos",
+                                5: "Plano integrado à estratégia com inovação contínua"
+                            },
+                            "recommendations": {
+                                1: "Identifique quick wins para começar",
+                                2: "Estruture um plano formal de ação",
+                                3: "Detalhe projetos com ROI e impacto",
+                                4: "Acelere implementação e monitore resultados",
+                                5: "Inove e compartilhe aprendizados"
+                            }
+                        },
+                        {
+                            "id": 17,
+                            "text": "Qual o nível de investimento em eficiência energética?",
+                            "levels": {
+                                1: "Não investimos em eficiência energética",
+                                2: "Investimentos pontuais reativos",
+                                3: "Programa básico de eficiência",
+                                4: "Investimentos significativos e contínuos",
+                                5: "Liderança em eficiência com tecnologias de ponta"
+                            },
+                            "recommendations": {
+                                1: "Faça diagnóstico energético inicial",
+                                2: "Implemente medidas de baixo custo",
+                                3: "Estruture programa de eficiência",
+                                4: "Invista em tecnologias avançadas",
+                                5: "Seja benchmark em eficiência energética"
+                            }
+                        },
+                        {
+                            "id": 18,
+                            "text": "A empresa utiliza energias renováveis?",
+                            "levels": {
+                                1: "Não utilizamos energias renováveis",
+                                2: "Uso mínimo ou certificados verdes básicos",
+                                3: "Parte da energia de fontes renováveis (20-50%)",
+                                4: "Maioria renovável (>50%) com PPAs ou geração própria",
+                                5: "100% renovável com geração distribuída e inovação"
+                            },
+                            "recommendations": {
+                                1: "Avalie viabilidade de energia renovável",
+                                2: "Contrate energia no mercado livre renovável",
+                                3: "Considere PPAs de longo prazo",
+                                4: "Invista em geração própria",
+                                5: "Lidere transição energética do setor"
+                            }
+                        },
+                        {
+                            "id": 19,
+                            "text": "Como está a eletrificação da frota?",
+                            "levels": {
+                                1: "Frota 100% a combustão",
+                                2: "Primeiros pilotos ou estudos",
+                                3: "Início da eletrificação (<20% da frota)",
+                                4: "Eletrificação avançada (>50% da frota)",
+                                5: "Frota 100% zero emissão com infraestrutura própria"
+                            },
+                            "recommendations": {
+                                1: "Estude viabilidade de eletrificação",
+                                2: "Inicie pilotos com veículos leves",
+                                3: "Expanda programa com infraestrutura",
+                                4: "Acelere transição completa",
+                                5: "Apoie cadeia na eletrificação"
+                            }
+                        },
+                        {
+                            "id": 20,
+                            "text": "Há iniciativas de economia circular implementadas?",
+                            "levels": {
+                                1: "Não temos iniciativas de economia circular",
+                                2: "Ações pontuais de reciclagem",
+                                3: "Programa estruturado de gestão de resíduos",
+                                4: "Economia circular em produtos e processos",
+                                5: "Modelo de negócio circular e regenerativo"
+                            },
+                            "recommendations": {
+                                1: "Mapeie oportunidades de circularidade",
+                                2: "Implemente gestão de resíduos",
+                                3: "Desenvolva produtos circulares",
+                                4: "Transforme modelo de negócio",
+                                5: "Lidere economia regenerativa"
+                            }
+                        },
+                        {
+                            "id": 21,
+                            "text": "A empresa desenvolve produtos/serviços de baixo carbono?",
+                            "levels": {
+                                1: "Não consideramos carbono no desenvolvimento",
+                                2: "Análise pontual em alguns produtos",
+                                3: "Ecodesign em parte do portfólio",
+                                4: "Estratégia de descarbonização de produtos",
+                                5: "Portfólio climate-positive e inovação contínua"
+                            },
+                            "recommendations": {
+                                1: "Calcule pegada de carbono dos produtos",
+                                2: "Implemente ecodesign básico",
+                                3: "Desenvolva linha de produtos verdes",
+                                4: "Transforme portfólio completo",
+                                5: "Crie soluções climate-positive"
+                            }
+                        },
+                        {
+                            "id": 22,
+                            "text": "Como está o engajamento de fornecedores em sustentabilidade?",
+                            "levels": {
+                                1: "Não engajamos fornecedores no tema",
+                                2: "Comunicação básica sem exigências",
+                                3: "Código de conduta com critérios ESG",
+                                4: "Programa estruturado com metas e suporte",
+                                5: "Colaboração profunda e inovação conjunta"
+                            },
+                            "recommendations": {
+                                1: "Mapeie emissões da cadeia de suprimentos",
+                                2: "Estabeleça código de conduta ESG",
+                                3: "Crie programa de engajamento",
+                                4: "Desenvolva fornecedores estratégicos",
+                                5: "Co-crie soluções de impacto"
+                            }
+                        },
+                        {
+                            "id": 23,
+                            "text": "Existem projetos de captura ou remoção de carbono?",
+                            "levels": {
+                                1: "Não temos projetos de remoção",
+                                2: "Estudos iniciais ou interesse",
+                                3: "Projetos piloto ou parcerias",
+                                4: "Projetos implementados com escala",
+                                5: "Liderança em soluções nature-based ou tecnológicas"
+                            },
+                            "recommendations": {
+                                1: "Estude opções de remoção de carbono",
+                                2: "Avalie projetos nature-based solutions",
+                                3: "Implemente primeiros projetos",
+                                4: "Escale soluções comprovadas",
+                                5: "Inove em tecnologias de fronteira"
+                            }
+                        },
+                        {
+                            "id": 24,
+                            "text": "A empresa possui plano de adaptação climática?",
+                            "levels": {
+                                1: "Não temos plano de adaptação",
+                                2: "Consciência dos riscos sem plano formal",
+                                3: "Análise de riscos com ações pontuais",
+                                4: "Plano robusto de adaptação e resiliência",
+                                5: "Gestão integrada de riscos com TCFD completo"
+                            },
+                            "recommendations": {
+                                1: "Identifique riscos climáticos físicos",
+                                2: "Desenvolva análise de vulnerabilidade",
+                                3: "Crie plano de adaptação",
+                                4: "Implemente medidas de resiliência",
+                                5: "Lidere disclosure TCFD"
+                            }
+                        },
+                        {
+                            "id": 25,
+                            "text": "Como está a capacitação em sustentabilidade?",
+                            "levels": {
+                                1: "Não há capacitação no tema",
+                                2: "Treinamentos pontuais básicos",
+                                3: "Programa regular para áreas-chave",
+                                4: "Capacitação ampla com certificações",
+                                5: "Cultura de sustentabilidade com todos engajados"
+                            },
+                            "recommendations": {
+                                1: "Inicie sensibilização básica",
+                                2: "Treine lideranças e áreas-chave",
+                                3: "Expanda programa de capacitação",
+                                4: "Certifique profissionais internos",
+                                5: "Seja academia de sustentabilidade"
+                            }
+                        }
+                    ],
+                    "description": "Avalie os planos e ações de mitigação climática"
+                },
+                "5. Busca certificações": {
+                    "questions": [
+                        {
+                            "id": 26,
+                            "text": "A empresa possui certificações ambientais?",
+                            "levels": {
+                                1: "Não possuímos certificações",
+                                2: "Em processo de obtenção da primeira",
+                                3: "Uma ou duas certificações básicas (ISO 14001)",
+                                4: "Múltiplas certificações relevantes ao setor",
+                                5: "Portfólio completo incluindo B Corp, CDP A-List"
+                            },
+                            "recommendations": {
+                                1: "Avalie certificações relevantes ao negócio",
+                                2: "Busque ISO 14001 como base",
+                                3: "Adicione certificações específicas do setor",
+                                4: "Busque reconhecimentos de excelência",
+                                5: "Influencie padrões do mercado"
+                            }
+                        },
+                        {
+                            "id": 27,
+                            "text": "A empresa participa de iniciativas ou compromissos climáticos?",
+                            "levels": {
+                                1: "Não participamos de iniciativas",
+                                2: "Interesse mas sem adesão formal",
+                                3: "Adesão a pactos nacionais",
+                                4: "Múltiplos compromissos incluindo globais",
+                                5: "Liderança em iniciativas setoriais e globais"
+                            },
+                            "recommendations": {
+                                1: "Conheça principais iniciativas do setor",
+                                2: "Adira ao Pacto Global ou similar",
+                                3: "Participe de iniciativas setoriais",
+                                4: "Assuma compromissos ambiciosos (SBTi, RE100)",
+                                5: "Lidere coalizões transformadoras"
+                            }
+                        }
+                    ],
+                    "description": "Avalie certificações e validações externas"
+                },
+                "6. Compra de créditos": {
+                    "questions": [
+                        {
+                            "id": 28,
+                            "text": "A empresa utiliza compensação de carbono?",
+                            "levels": {
+                                1: "Não fazemos compensação",
+                                2: "Compensação pontual sem critérios",
+                                3: "Compensação parcial com critérios básicos",
+                                4: "Estratégia robusta com créditos de alta qualidade",
+                                5: "Além da neutralidade: climate positive"
+                            },
+                            "recommendations": {
+                                1: "Entenda o papel da compensação na estratégia",
+                                2: "Defina critérios para seleção de créditos",
+                                3: "Compense emissões residuais prioritárias",
+                                4: "Use apenas créditos certificados premium",
+                                5: "Desenvolva projetos próprios de remoção"
+                            }
+                        },
+                        {
+                            "id": 29,
+                            "text": "Qual a estratégia para neutralidade de carbono?",
+                            "levels": {
+                                1: "Não temos estratégia definida",
+                                2: "Intenção sem plano estruturado",
+                                3: "Plano de neutralidade de longo prazo",
+                                4: "Roadmap detalhado com marcos intermediários",
+                                5: "Net Zero validado com ações em andamento"
+                            },
+                            "recommendations": {
+                                1: "Defina visão de neutralidade",
+                                2: "Estruture plano de longo prazo",
+                                3: "Detalhe roadmap com investimentos",
+                                4: "Valide compromisso Net Zero (SBTi)",
+                                5: "Acelere para climate positive"
+                            }
+                        }
+                    ],
+                    "description": "Avalie estratégias de compensação e neutralização"
+                }
+            },
+            "maturity_levels": {
+                1: {"name": "Não fazemos", "color": "#EF4444", "description": "Ainda não iniciamos ações nesta área"},
+                2: {"name": "Iniciando", "color": "#F59E0B", "description": "Primeiros passos e ações pontuais"},
+                3: {"name": "Desenvolvendo", "color": "#FDE047", "description": "Processos em desenvolvimento e estruturação"},
+                4: {"name": "Consolidado", "color": "#84CC16", "description": "Práticas estabelecidas e funcionando bem"},
+                5: {"name": "Excelência", "color": "#22C55E", "description": "Referência e melhoria contínua"}
+            },
+            "profile_questions": {
+                "Qual é o tipo de indústria da sua empresa?": [
+                    "Indústrias Emissoras e de Transformação",
+                    "Serviços de Infraestrutura e Logística",
+                    "Comércio e Bens de Consumo",
+                    "Agro e Uso da Terra",
+                    "Educação, Saúde e Serviços Públicos",
+                    "Setor Financeiro e de Crédito"
+                ]
+            }
+        };
+
+        // Global variables
+        let currentEloIndex = 0;
+        let responses = {};
+        let eloKeys = Object.keys(assessmentData.elos);
+        let totalQuestions = 0;
+        let answeredQuestions = 0;
+        let userData = {};
+        let industryType = '';
+
+        // Initialize
+        function initializeAssessment() {
+            totalQuestions = eloKeys.reduce((sum, elo) => 
+                sum + assessmentData.elos[elo].questions.length, 0);
+            updateHeaderProgress();
+        }
+
+        // Start Assessment
+        function startAssessment() {
+            const industry = document.getElementById('industryType').value;
+            if (!industry) {
+                alert('Por favor, selecione o tipo de indústria da sua empresa.');
+                return;
+            }
+            
+            industryType = industry;
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('assessmentQuestions').classList.remove('hidden');
+            document.getElementById('globalProgress').classList.remove('hidden');
+            
+            renderStepIndicator();
+            renderEloQuestions();
+            updateProgress();
+        }
+
+        // Render step indicator
+        function renderStepIndicator() {
+            const container = document.getElementById('stepIndicator');
+            container.innerHTML = '';
+            
+            eloKeys.forEach((elo, index) => {
+                const step = document.createElement('div');
+                step.className = 'step';
+                
+                if (index < currentEloIndex) {
+                    step.classList.add('completed');
+                } else if (index === currentEloIndex) {
+                    step.classList.add('active');
+                }
+                
+                const circle = document.createElement('div');
+                circle.className = 'step-circle';
+                circle.textContent = index + 1;
+                
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.textContent = elo.split('.')[1].trim();
+                
+                step.appendChild(circle);
+                step.appendChild(label);
+                container.appendChild(step);
+            });
+        }
+
+        // Render questions for current elo
+        function renderEloQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            const elo = eloKeys[currentEloIndex];
+            const eloData = assessmentData.elos[elo];
+            
+            // Create elo card
+            const eloCard = document.createElement('div');
+            eloCard.className = 'journey-card slide-in';
+            
+            // Elo header
+            const header = document.createElement('div');
+            header.className = 'mb-6';
+            header.innerHTML = `
+                <h3 class="text-2xl font-bold text-peers-blue mb-2">${elo}</h3>
+                <p class="text-gray-600">${eloData.description}</p>
+                <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>${eloData.questions.length} ${eloData.questions.length === 1 ? 'pergunta' : 'perguntas'}</span>
+                </div>
+            `;
+            eloCard.appendChild(header);
+            
+            // Render questions
+            eloData.questions.forEach((question, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                
+                // Question header
+                const qHeader = document.createElement('div');
+                qHeader.className = 'mb-4';
+                qHeader.innerHTML = `
+                    <div class="flex items-start justify-between mb-2">
+                        <span class="inline-block px-3 py-1 bg-peers-serene text-peers-blue text-sm font-semibold rounded-full">
+                            Pergunta ${question.id} de ${totalQuestions}
+                        </span>
+                    </div>
+                    <p class="text-lg font-medium text-gray-800">${question.text}</p>
+                `;
+                questionCard.appendChild(qHeader);
+                
+                // Maturity options
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3';
+                
+                for (let level = 1; level <= 5; level++) {
+                    const option = document.createElement('div');
+                    option.className = 'maturity-option p-4 rounded-lg text-center cursor-pointer';
+                    option.setAttribute('data-question', question.id);
+                    option.setAttribute('data-level', level);
+                    
+                    // Check if already selected
+                    if (responses[question.id] === level) {
+                        option.classList.add('selected');
+                    }
+                    
+                    const levelInfo = assessmentData.maturity_levels[level];
+                    
+                    option.innerHTML = `
+                        <div class="text-3xl font-bold mb-2" style="color: ${levelInfo.color}">${level}</div>
+                        <div class="font-semibold text-sm mb-2">${levelInfo.name}</div>
+                        <div class="relative">
+                            <div class="info-icon" onclick="event.stopPropagation(); toggleTooltip('tooltip_${question.id}_${level}')">?</div>
+                            <div id="tooltip_${question.id}_${level}" class="tooltip">
+                                ${question.levels[level]}
+                            </div>
+                        </div>
+                    `;
+                    
+                    option.onclick = () => selectOption(question.id, level);
+                    optionsGrid.appendChild(option);
+                }
+                
+                questionCard.appendChild(optionsGrid);
+                eloCard.appendChild(questionCard);
+            });
+            
+            container.appendChild(eloCard);
+            updateNavigationButtons();
+            updateQuestionCounter();
+        }
+
+        // Select option
+        function selectOption(questionId, level) {
+            const wasAnswered = responses[questionId] !== undefined;
+            responses[questionId] = level;
+            
+            if (!wasAnswered) {
+                answeredQuestions++;
+            }
+            
+            // Update UI
+            document.querySelectorAll(`[data-question="${questionId}"]`).forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            const selected = document.querySelector(`[data-question="${questionId}"][data-level="${level}"]`);
+            if (selected) {
+                selected.classList.add('selected');
+            }
+            
+            updateProgress();
+        }
+
+        // Toggle tooltip
+        function toggleTooltip(tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            
+            // Close all other tooltips
+            document.querySelectorAll('.tooltip.show').forEach(t => {
+                if (t.id !== tooltipId) {
+                    t.classList.remove('show');
+                }
+            });
+            
+            tooltip.classList.toggle('show');
+        }
+
+        // Close tooltips on click outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('info-icon')) {
+                document.querySelectorAll('.tooltip.show').forEach(t => {
+                    t.classList.remove('show');
+                });
+            }
+        });
+
+        // Navigation
+        function nextElo() {
+            const elo = eloKeys[currentEloIndex];
+            const eloData = assessmentData.elos[elo];
+            let allAnswered = true;
+            
+            // Check if all questions answered
+            for (const question of eloData.questions) {
+                if (!responses[question.id]) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+            
+            if (!allAnswered) {
+                if (!confirm('Você não respondeu todas as perguntas deste pilar. Deseja continuar mesmo assim?')) {
+                    return;
+                }
+            }
+            
+            if (currentEloIndex < eloKeys.length - 1) {
+                currentEloIndex++;
+                renderStepIndicator();
+                renderEloQuestions();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function previousElo() {
+            if (currentEloIndex > 0) {
+                currentEloIndex--;
+                renderStepIndicator();
+                renderEloQuestions();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (currentEloIndex === 0) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+            
+            if (currentEloIndex === eloKeys.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        function updateQuestionCounter() {
+            const counter = document.getElementById('questionCounter');
+            const elo = eloKeys[currentEloIndex];
+            counter.textContent = `Pilar ${currentEloIndex + 1} de ${eloKeys.length}`;
+        }
+
+        function updateProgress() {
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${Math.round(progress)}% completo - ${answeredQuestions} de ${totalQuestions} perguntas`;
+            updateHeaderProgress();
+        }
+
+        function updateHeaderProgress() {
+            const progress = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+            document.getElementById('headerProgress').textContent = progress;
+        }
+
+        // Submit Assessment
+        function submitAssessment() {
+            if (answeredQuestions < totalQuestions) {
+                if (!confirm(`Você respondeu ${answeredQuestions} de ${totalQuestions} perguntas. Deseja concluir o assessment?`)) {
+                    return;
+                }
+            }
+            
+            document.getElementById('assessmentQuestions').classList.add('hidden');
+            document.getElementById('globalProgress').classList.add('hidden');
+            document.getElementById('dataCaptureSection').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Data capture form
+        document.getElementById('dataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            userData = {
+                name: document.getElementById('userName').value,
+                role: document.getElementById('userRole').value,
+                company: document.getElementById('userCompany').value,
+                email: document.getElementById('userEmail').value,
+                whatsapp: document.getElementById('userWhatsapp').value,
+                industry: industryType,
+                timestamp: new Date().toISOString()
+            };
+            
+            generateReport();
+        });
+
+        function skipDataCapture() {
+            userData = { company: 'Não informado' };
+            generateReport();
+        }
+
+        // Generate Report
+        function generateReport() {
+            document.getElementById('dataCaptureSection').classList.add('hidden');
+            document.getElementById('reportSection').classList.remove('hidden');
+            
+            // Set report data
+            if (userData.company && userData.company !== 'Não informado') {
+                document.getElementById('reportCompany').textContent = userData.company;
+            }
+            document.getElementById('reportDate').textContent = new Date().toLocaleDateString('pt-BR');
+            
+            // Calculate scores
+            const eloScores = {};
+            let totalScore = 0;
+            let totalResponses = 0;
+            
+            eloKeys.forEach(elo => {
+                const eloData = assessmentData.elos[elo];
+                let eloSum = 0;
+                let eloCount = 0;
+                
+                eloData.questions.forEach(question => {
+                    if (responses[question.id]) {
+                        eloSum += responses[question.id];
+                        eloCount++;
+                        totalScore += responses[question.id];
+                        totalResponses++;
+                    }
+                });
+                
+                if (eloCount > 0) {
+                    eloScores[elo] = eloSum / eloCount;
+                } else {
+                    eloScores[elo] = 0;
+                }
+            });
+            
+            const overallScore = totalResponses > 0 ? totalScore / totalResponses : 0;
+            
+            // Display overall score
+            document.getElementById('overallScore').textContent = overallScore.toFixed(1);
+            const levelIndex = Math.round(overallScore);
+            const level = assessmentData.maturity_levels[levelIndex] || assessmentData.maturity_levels[1];
+            document.getElementById('overallLevel').textContent = level.name;
+            
+            // Score bar
+            const scorePercentage = (overallScore - 1) / 4 * 100;
+            document.getElementById('scoreBar').style.width = `${scorePercentage}%`;
+            
+            // Journey visualization
+            renderJourneyVisualization(eloScores);
+            
+            // Radar chart
+            createRadarChart(eloScores);
+            
+            // Detailed analysis
+            renderDetailedAnalysis(eloScores);
+            
+            // Recommendations
+            generateRecommendations(eloScores);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderJourneyVisualization(scores) {
+            const nodesContainer = document.getElementById('journeyNodes');
+            const labelsContainer = document.getElementById('journeyLabels');
+            nodesContainer.innerHTML = '';
+            labelsContainer.innerHTML = '';
+            
+            let completedCount = 0;
+            eloKeys.forEach((elo, index) => {
+                const score = scores[elo] || 0;
+                
+                // Node
+                const node = document.createElement('div');
+                node.className = 'journey-node';
+                
+                if (score >= 4) {
+                    node.classList.add('completed');
+                    completedCount++;
+                } else if (score >= 2) {
+                    node.classList.add('current');
+                }
+                
+                node.textContent = index + 1;
+                nodesContainer.appendChild(node);
+                
+                // Label
+                const label = document.createElement('div');
+                label.className = 'text-xs text-center text-gray-600 max-w-[100px]';
+                label.textContent = elo.split('.')[1].trim();
+                labelsContainer.appendChild(label);
+            });
+            
+            // Progress line
+            const progressPercentage = (completedCount / eloKeys.length) * 100;
+            document.getElementById('journeyProgress').style.width = `${progressPercentage}%`;
+        }
+
+        function createRadarChart(scores) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            const labels = eloKeys.map(elo => elo.split('.')[1].trim());
+            const data = eloKeys.map(elo => scores[elo] || 0);
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Maturidade',
+                        data: data,
+                        backgroundColor: 'rgba(225, 255, 0, 0.3)',
+                        borderColor: '#011334',
+                        pointBackgroundColor: '#E1FF00',
+                        pointBorderColor: '#011334',
+                        pointHoverBackgroundColor: '#E1FF00',
+                        pointHoverBorderColor: '#011334',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    return value;
+                                }
+                            },
+                            grid: {
+                                color: '#E5E7EB'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const level = Math.round(context.raw);
+                                    const maturity = assessmentData.maturity_levels[level];
+                                    return `Score: ${context.raw.toFixed(1)} - ${maturity.name}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderDetailedAnalysis(scores) {
+            const container = document.getElementById('detailedAnalysis');
+            container.innerHTML = '';
+            
+            eloKeys.forEach(elo => {
+                const score = scores[elo] || 0;
+                const level = Math.round(score);
+                const maturity = assessmentData.maturity_levels[level] || assessmentData.maturity_levels[1];
+                
+                const analysisCard = document.createElement('div');
+                analysisCard.className = 'mb-6 p-6 bg-gray-50 rounded-xl';
+                
+                analysisCard.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-bold text-peers-blue">${elo}</h4>
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl font-bold" style="color: ${maturity.color}">${score.toFixed(1)}</span>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold text-white" style="background-color: ${maturity.color}">
+                                ${maturity.name}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                        <div class="h-3 rounded-full transition-all duration-500" 
+                             style="width: ${(score/5)*100}%; background-color: ${maturity.color}"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">${assessmentData.elos[elo].description}</p>
+                `;
+                
+                container.appendChild(analysisCard);
+            });
+        }
+
+        function generateRecommendations(scores) {
+            const container = document.getElementById('recommendationsContainer');
+            container.innerHTML = '';
+            
+            // Group recommendations by priority
+            const highPriority = [];
+            const mediumPriority = [];
+            const lowPriority = [];
+            
+            eloKeys.forEach(elo => {
+                const score = scores[elo] || 0;
+                const eloData = assessmentData.elos[elo];
+                
+                eloData.questions.forEach(question => {
+                    const questionScore = responses[question.id] || 1;
+                    
+                    if (questionScore <= 2) {
+                        highPriority.push({
+                            elo: elo,
+                            question: question.text,
+                            recommendation: question.recommendations[questionScore]
+                        });
+                    } else if (questionScore === 3) {
+                        mediumPriority.push({
+                            elo: elo,
+                            question: question.text,
+                            recommendation: question.recommendations[questionScore]
+                        });
+                    } else if (questionScore === 4) {
+                        lowPriority.push({
+                            elo: elo,
+                            question: question.text,
+                            recommendation: question.recommendations[questionScore]
+                        });
+                    }
+                });
+            });
+            
+            // Render high priority
+            if (highPriority.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-8';
+                section.innerHTML = `
+                    <h4 class="text-xl font-bold text-peers-blue mb-4 flex items-center gap-2">
+                        <span class="priority-badge priority-high">Prioridade Alta</span>
+                        <span class="text-sm font-normal text-gray-600">Ações imediatas recomendadas</span>
+                    </h4>
+                `;
+                
+                highPriority.slice(0, 5).forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'recommendation-card';
+                    card.innerHTML = `
+                        <div class="text-sm font-semibold text-peers-green mb-1">${item.elo}</div>
+                        <div class="text-gray-700 mb-2">${item.recommendation}</div>
+                        <div class="text-xs text-gray-500 italic">Relacionado a: ${item.question}</div>
+                    `;
+                    section.appendChild(card);
+                });
+                
+                container.appendChild(section);
+            }
+            
+            // Render medium priority
+            if (mediumPriority.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-8';
+                section.innerHTML = `
+                    <h4 class="text-xl font-bold text-peers-blue mb-4 flex items-center gap-2">
+                        <span class="priority-badge priority-medium">Prioridade Média</span>
+                        <span class="text-sm font-normal text-gray-600">Ações de médio prazo</span>
+                    </h4>
+                `;
+                
+                mediumPriority.slice(0, 5).forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'recommendation-card';
+                    card.innerHTML = `
+                        <div class="text-sm font-semibold text-peers-green mb-1">${item.elo}</div>
+                        <div class="text-gray-700 mb-2">${item.recommendation}</div>
+                        <div class="text-xs text-gray-500 italic">Relacionado a: ${item.question}</div>
+                    `;
+                    section.appendChild(card);
+                });
+                
+                container.appendChild(section);
+            }
+            
+            // Render low priority
+            if (lowPriority.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-8';
+                section.innerHTML = `
+                    <h4 class="text-xl font-bold text-peers-blue mb-4 flex items-center gap-2">
+                        <span class="priority-badge priority-low">Aprimoramento</span>
+                        <span class="text-sm font-normal text-gray-600">Oportunidades de evolução</span>
+                    </h4>
+                `;
+                
+                lowPriority.slice(0, 3).forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'recommendation-card';
+                    card.innerHTML = `
+                        <div class="text-sm font-semibold text-peers-green mb-1">${item.elo}</div>
+                        <div class="text-gray-700 mb-2">${item.recommendation}</div>
+                        <div class="text-xs text-gray-500 italic">Relacionado a: ${item.question}</div>
+                    `;
+                    section.appendChild(card);
+                });
+                
+                container.appendChild(section);
+            }
+        }
+
+        // Utility functions
+        function downloadReport() {
+            alert('Funcionalidade de download será implementada em breve. Por favor, use a opção de imprimir.');
+        }
+
+        function scheduleConsulting() {
+            window.open('https://www.peers.com.br/contato', '_blank');
+        }
+
+        // WhatsApp mask
+        document.getElementById('userWhatsapp').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            if (value.length > 6) {
+                value = `(${value.slice(0,2)}) ${value.slice(2,7)}-${value.slice(7)}`;
+            } else if (value.length > 2) {
+                value = `(${value.slice(0,2)}) ${value.slice(2)}`;
+            } else if (value.length > 0) {
+                value = `(${value}`;
+            }
+            
+            e.target.value = value;
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAssessment();
+        });
+    </script>
+</body>
+</html>
