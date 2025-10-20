@@ -1531,9 +1531,38 @@ function getGenericRecommendation(principle, level) {
 // Função auxiliar para identificar ações prioritárias
 function getPriorityActions() {
     const actions = [];
+    
+    // Calcular a média geral de TODAS as respostas
+    let totalScore = 0;
+    let totalResponses = 0;
+    
+    Object.values(responses).forEach(score => {
+        if (score) {
+            totalScore += score;
+            totalResponses++;
+        }
+    });
+    
+    // Calcular média geral
+    const avgScore = totalResponses > 0 ? (totalScore / totalResponses) : 0;
+    
+    // Adicionar análise geral baseada na média
+    if (avgScore > 0 && avgScore <= 2.5) {
+        actions.push("Governança Inicial/Básica: Esse resultado indica a necessidade de iniciar a formalização de políticas, definição clara de responsabilidades e criação de mecanismos básicos de comunicação, monitoramento e engajamento. O momento é de construção de fundamentos sólidos, que servirão como base para avançar rumo a um nível mais consistente de governança.");
+    }
+    else if (avgScore > 2.5 && avgScore <= 3.5) {
+        actions.push("Governança em Desenvolvimento: A organização já demonstra avanços relevantes na adoção de práticas de governança, mas ainda de forma parcial, irregular ou pouco integrada. Existem processos estruturados, porém com falhas de aplicação ou baixa maturidade. Esse estágio mostra que a governança já é reconhecida como tema estratégico, mas precisa ser fortalecida com maior consistência, padronização e monitoramento. O próximo passo é ampliar o escopo das ações existentes, investir em indicadores e treinamentos, além de integrar as práticas de forma transversal à estratégia do negócio.");
+    }
+    else if (avgScore > 3.5 && avgScore <= 4.5) {
+        actions.push("Governança Estruturada e Consistente: Sua organização possui um nível sólido de governança corporativa, com práticas claras, consistentes e alinhadas aos princípios fundamentais. Há transparência nos processos, equidade entre stakeholders, mecanismos eficazes de accountability, integridade institucionalizada e integração de temas ESG à estratégia. O desafio, nesse estágio, é consolidar ainda mais os processos, investir em revisão contínua, automatização e rastreabilidade, garantindo que as práticas de governança se mantenham atualizadas e sustentáveis a longo prazo. Esse é um nível avançado que coloca a organização em posição diferenciada no mercado.");
+    }
+    else if (avgScore > 4.5) {
+        actions.push("Governança de Excelência/Referência: Sua organização alcança um nível de excelência em governança corporativa, sendo referência no mercado. As práticas estão consolidadas, continuamente aprimoradas, auditadas e reconhecidas como benchmark. Existe um compromisso ativo com transparência, equidade, accountability, integridade e sustentabilidade, com inovação e engajamento efetivo das partes interessadas. Esse resultado indica maturidade elevada e posiciona a organização não apenas como praticante, mas também como inspiradora de boas práticas, capaz de compartilhar experiências e influenciar positivamente seu ecossistema.");
+    }
+    
+    // Adicionar ações específicas baseadas em áreas críticas
     const criticalAreas = [];
     
-    // Identificar áreas críticas (níveis 1 e 2)
     principleKeys.forEach(principle => {
         const principleData = assessmentData.principles[principle];
         let sumScores = 0;
@@ -1548,28 +1577,21 @@ function getPriorityActions() {
         });
         
         if (countScores > 0) {
-            const avgScore = sumScores / countScores;
-            if (avgScore <= 2) {
+            const principlAvgScore = sumScores / countScores;
+            if (principlAvgScore <= 2) {
                 criticalAreas.push(principle.split(':')[1].trim());
             }
         }
     });
     
-    // Adicionar ações baseadas nas áreas críticas
+    // Adicionar recomendações adicionais se houver áreas críticas
     if (criticalAreas.length > 0) {
-        actions.push(`Focar imediatamente nas áreas de: ${criticalAreas.join(', ')}`);
-        actions.push("Estabelecer um comitê de governança para supervisionar melhorias");
-        actions.push("Definir um cronograma de 90 dias para implementar ações básicas");
-    }
-    
-    // Adicionar ação genérica se houver muitas áreas abaixo de 3
-    const lowScoreCount = Object.values(responses).filter(score => score < 3).length;
-    if (lowScoreCount > 5) {
-        actions.push("Considerar consultoria especializada em governança corporativa");
+        actions.push(`Atenção especial necessária nas áreas: ${criticalAreas.join(', ')}`);
     }
     
     return actions;
 }
+
 
         function printReport() {
             window.print();
