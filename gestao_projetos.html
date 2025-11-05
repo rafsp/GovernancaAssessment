@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Assessment de Gestão de Projetos - PEERS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --peers-blue: #011334;
+            --peers-lime: #E1FF00;
+            --peers-gray: #F2F2F2;
+            --peers-serene: #D8E8EE;
+        }
+        
+        .bg-peers-blue { background-color: var(--peers-blue); }
+        .bg-peers-lime { background-color: var(--peers-lime); }
+        .bg-peers-gray { background-color: var(--peers-gray); }
+        .text-peers-blue { color: var(--peers-blue); }
+        .text-peers-lime { color: var(--peers-lime); }
+        .border-peers-blue { border-color: var(--peers-blue); }
+        .border-peers-lime { border-color: var(--peers-lime); }
+        
+        .btn-primary {
+            background-color: var(--peers-lime);
+            color: var(--peers-blue);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(1, 19, 52, 0.2);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--peers-blue);
+            border: 2px solid var(--peers-blue);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--peers-blue);
+            color: white;
+        }
+
+        /* Estilos para o termômetro visual */
+        .thermometer-gradient {
+            background: linear-gradient(to right, 
+                #ef4444 0%, 
+                #f59e0b 25%, 
+                #fde047 50%, 
+                #84cc16 75%, 
+                #22c55e 100%
+            );
+        }
+        
+        .score-indicator {
+            transition: left 0.7s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        
+        /* Estilos para os pilares de gestão */
+        .governance-pillar {
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .governance-pillar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .maturity-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .maturity-option:hover {
+            transform: scale(1.05);
+        }
+        
+        .maturity-option.selected {
+            background-color: var(--peers-lime);
+            color: var(--peers-blue);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(225, 255, 0, 0.3);
+        }
+        
+        .principle-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--peers-blue);
+        }
+        
+        .question-card {
+            background: var(--peers-gray);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Container do radar com padding */
+        #radarChart {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Ajuste do grid do relatório */
+        .report-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .report-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            #radarChart {
+                max-height: 320px !important;
+            }
+            
+            .p-4.md\:p-8 {
+                min-height: 350px !important;
+            }
+        }
+        
+        .info-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--peers-blue);
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-icon:hover {
+            background-color: var(--peers-lime);
+            color: var(--peers-blue);
+            transform: scale(1.2);
+        }
+
+        /* Tooltip para desktop */
+        .info-tooltip {
+            position: absolute;
+            background: white;
+            border: 2px solid var(--peers-blue);
+            border-radius: 8px;
+            padding: 12px;
+            width: 250px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            z-index: 99999;
+            display: none;
+            font-size: 0.875rem;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .info-tooltip.show {
+            display: block;
+        }
+
+        /* Overlay para mobile */
+        .tooltip-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            z-index: 99998;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .tooltip-overlay.show {
+            display: flex;
+        }
+
+        .tooltip-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .tooltip-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--peers-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .info-tooltip {
+                display: none !important;
+            }
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen py-4 md:py-8">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Header com Logo -->
+    <header class="bg-peers-blue text-white py-6 px-8 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <img src="https://d3fh32tca5cd7q.cloudfront.net/wp-content/uploads/2025/03/logo.svg" 
+                 alt="PEERS" 
+                 style="height: 45px; width: auto;">
+            <div class="text-sm">
+                <span class="text-peers-lime">Assessment</span> | Gestão de Projetos
+            </div>
+        </div>
+    </header>
+
+            <!-- Progress Indicator -->
+            <div id="progressIndicator" class="hidden bg-white p-4 shadow-md rounded-b-2xl mb-6 md:mb-8">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Progresso do Assessment</span>
+                    <span class="text-sm font-semibold text-peers-blue">
+                        <span id="answeredCount">0</span> / <span id="totalCount">9</span> perguntas respondidas
+                    </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div id="progressBar" class="bg-peers-lime h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Content Container -->
+            <div class="bg-white rounded-b-2xl shadow-xl">
+                <!-- Welcome Screen -->
+                <div id="welcomeScreen" class="text-center py-8 md:py-12 px-4 md:px-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-peers-blue mb-6">
+                        Fast Assessment de Maturidade em Gestão de Projetos
+                    </h2>
+                    
+                    <p class="text-base md:text-lg text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto">
+                        Avalie o nível de maturidade da sua organização em práticas de gestão de projetos
+                        através de 9 perguntas estratégicas distribuídas em 5 dimensões fundamentais.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-8 text-left max-w-3xl mx-auto">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="font-semibold text-peers-blue mb-2">O que será avaliado:</h3>
+                            <ul class="space-y-1 text-sm text-gray-600">
+                                <li>• Metodologia & Governança</li>
+                                <li>• Estrutura & Planejamento</li>
+                                <li>• Gestão da Mudança</li>
+                                <li>• Capacitação & Gestão de Aprendizados</li>
+                                <li>• Uso de Ferramentas</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="font-semibold text-peers-blue mb-2">Como funciona:</h3>
+                            <ul class="space-y-1 text-sm text-gray-600 text-left">
+                                <li>• 9 perguntas objetivas</li>
+                                <li>• Escala de maturidade 1-4</li>
+                                <li>• Tempo estimado: 5-10 minutos</li>
+                                <li>• Relatório com recomendações personalizadas</li>
+                                <li>• Plano de ação por dimensão</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <button onclick="startAssessment()" class="btn-primary py-3 md:py-4 px-8 md:px-12 rounded-lg font-semibold text-base md:text-lg">
+                        Iniciar Assessment →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Assessment Questions -->
+            <div id="assessmentQuestions" class="hidden bg-white rounded-2xl shadow-xl p-4 md:p-8 mt-4">
+                <div id="questionsContainer"></div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-6 md:mt-8">
+                    <button id="prevBtn" onclick="previousPrinciple()" class="btn-secondary py-2 md:py-3 px-6 md:px-8 rounded-lg font-semibold hidden">
+                        ← Anterior
+                    </button>
+                    <button id="nextBtn" onclick="nextPrinciple()" class="btn-primary py-2 md:py-3 px-6 md:px-8 rounded-lg font-semibold">
+                        Próximo →
+                    </button>
+                    <button id="submitBtn" onclick="submitAssessment()" class="btn-primary py-2 md:py-3 px-6 md:px-8 rounded-lg font-semibold hidden">
+                        Concluir Assessment →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Capture Form -->
+            <div id="dataCaptureSection" class="hidden">
+                <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-2xl mx-auto mt-4">
+                    <div class="text-center mb-6 md:mb-8">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-peers-lime mb-4">
+                            <svg class="w-8 h-8 text-peers-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-xl md:text-2xl font-bold text-peers-blue mb-2">Assessment Concluído!</h2>
+                        <p class="text-sm md:text-base text-gray-600">Para receber seu relatório personalizado, preencha os dados abaixo:</p>
+                    </div>
+                    
+                    <form id="dataForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nome completo*</label>
+                            <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">E-mail corporativo*</label>
+                            <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Empresa*</label>
+                            <input type="text" name="company" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cargo*</label>
+                            <input type="text" name="position" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp (apenas números)</label>
+                            <input type="text" name="phone" id="phoneInput" placeholder="11999999999" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-peers-lime focus:border-transparent">
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <input type="checkbox" name="consent" required class="mt-1 mr-2">
+                            <label class="text-sm text-gray-600">
+                                Concordo em receber comunicações da PEERS sobre o resultado do assessment e outros conteúdos relevantes sobre gestão de projetos.*
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="w-full btn-primary py-3 rounded-lg font-semibold">
+                            Ver Resultado do Assessment →
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="reportSection" class="hidden">
+                <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mt-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-peers-blue mb-6 md:mb-8 text-center">
+                        Relatório de Maturidade em Gestão de Projetos
+                    </h2>
+                    
+                    <!-- Score Summary -->
+                    <div class="bg-gradient-to-r from-peers-blue to-blue-900 text-white rounded-xl p-6 md:p-8 mb-6 md:mb-8">
+                        <div class="text-center">
+                            <p class="text-base md:text-lg mb-2">Pontuação Geral</p>
+                            <div class="text-5xl md:text-6xl font-bold text-peers-lime" id="overallScoreDisplay">0.0</div>
+                            <p class="text-xs md:text-sm mt-2 opacity-90">de 4.0 pontos possíveis</p>
+                        </div>
+                        
+                        <div class="mt-6 relative h-10">
+                            <div class="thermometer-gradient h-full rounded-full"></div>
+                            <div id="scoreIndicator" class="score-indicator absolute top-1/2 -translate-y-1/2 bg-white text-peers-blue px-3 py-1 rounded-full font-bold text-sm" style="left: 0%;">
+                                <span id="maturityLevelText">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Report Grid -->
+                    <div class="report-grid mb-6 md:mb-8">
+                        <!-- Radar Chart -->
+                        <div class="bg-gray-50 rounded-xl p-4 md:p-8">
+                            <h3 class="text-lg md:text-xl font-semibold text-peers-blue mb-4">Análise por Dimensão</h3>
+                            <div class="relative" style="min-height: 320px;">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Maturity Analysis -->
+                        <div class="bg-gray-50 rounded-xl p-4 md:p-8">
+                            <h3 class="text-lg md:text-xl font-semibold text-peers-blue mb-4">Análise de Maturidade</h3>
+                            <div id="maturityAnalysis" class="space-y-4">
+                                <!-- Será preenchido dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Results by Principle -->
+                    <div id="detailedResults" class="space-y-4 md:space-y-6 mb-6 md:mb-8">
+                        <!-- Results will be inserted here dynamically -->
+                    </div>
+                    
+                    <!-- Recommendations Summary -->
+                    <div class="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 md:p-8 mb-6 md:mb-8 border-2 border-gray-200">
+                        <h3 class="text-xl md:text-2xl font-bold text-peers-blue mb-4 md:mb-6">Plano de Ação Recomendado</h3>
+                        <div id="recommendationsSummary" class="space-y-4">
+                            <!-- Recommendations will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Download Section -->
+                    <div class="bg-gradient-to-br from-peers-blue to-blue-900 text-white rounded-xl p-6 md:p-8 mb-6 md:mb-8 no-print">
+                        <div class="text-center">
+                            <h3 class="text-xl md:text-2xl font-bold mb-4">Baixe seu relatório completo</h3>
+                            <p class="text-sm md:text-base mb-6 opacity-90">Salve este assessment para futuras consultas e acompanhamento da evolução</p>
+                            <button onclick="downloadPDF()" class="bg-white text-peers-blue py-3 px-6 md:px-8 rounded-lg font-semibold hover:bg-gray-100 transition-all">
+                                📥 Download PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Section -->
+                    <div class="bg-peers-lime rounded-xl p-6 md:p-8 no-print">
+                        <div class="text-center">
+                            <h3 class="text-xl md:text-2xl font-bold text-peers-blue mb-4">
+                                Quer implementar melhorias na Gestão de Projetos?
+                            </h3>
+                            <p class="text-sm md:text-base text-gray-700 mb-6">
+                                Nossa equipe de especialistas pode ajudar sua empresa a evoluir para o próximo nível de maturidade
+                            </p>
+                            <a href="https://peers.com.br/contato" target="_blank" class="inline-block bg-peers-blue text-white py-3 px-6 md:px-8 rounded-lg font-semibold hover:opacity-90 transition-all">
+                                Falar com Especialista →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay para tooltips mobile -->
+    <div id="tooltipOverlay" class="tooltip-overlay">
+        <div class="tooltip-content">
+            <button class="tooltip-close" onclick="closeTooltip()">×</button>
+            <div id="tooltipText"></div>
+        </div>
+    </div>
+
+    <script>
+        // Assessment Data Structure
+        const assessmentData = {
+            principles: {
+                "Metodologia & Governança": {
+                    questions: [
+                        {
+                            text: "Sobre a metodologia utilizada para Gestão de Projetos em sua companhia, é possível dizer que:",
+                            levels: {
+                                1: "Existem boas práticas de gestão de projetos que algumas vezes são seguidas, como controle de cronograma.",
+                                2: "Existe uma metodologia básica institucionalizada, com controle de cronograma e riscos.",
+                                3: "Existe uma metodologia de gestão de projetos avançada que inclui controles de cronograma, riscos e recursos.",
+                                4: "Existem algumas metodologias institucionalizadas que são aplicadas de forma adaptada a realidade do que inclui controles de cronograma, riscos e recursos, além de controle de mudanças no projeto."
+                            }
+                        },
+                        {
+                            text: "Em sua empresa, como é a governança de projetos?",
+                            levels: {
+                                1: "Existe uma agenda básica de governança que nem sempre inclui todos os tomadores de decisão e é necessário o agendamento de reuniões paralelas para que os projetos evoluam.",
+                                2: "A governança dos projetos é respeitada e inclui os tomadores de decisão nos momentos necessários de forma estruturada.",
+                                3: "Existe uma estrutura de governança e comunicação robusta que garante o alinhamento de todos os envolvidos.",
+                                4: "Existe uma estrutura de governança e comunicação robusta que garante o alinhamento de todos os envolvidos, incluindo integrações e impactos de outros projetos."
+                            }
+                        }
+                    ],
+                    recommendations: {
+                        low: [
+                            "Definir uma metodologia básica de gestão de projetos com templates padronizados",
+                            "Estabelecer agenda regular de governança com stakeholders-chave",
+                            "Criar repositório central de documentação de projetos"
+                        ],
+                        medium: [
+                            "Implementar controles integrados de cronograma, riscos e recursos",
+                            "Desenvolver estrutura formal de governança com papéis definidos",
+                            "Estabelecer processo de gestão de mudanças em projetos"
+                        ],
+                        high: [
+                            "Adotar múltiplas metodologias adaptadas por tipo de projeto",
+                            "Implementar PMO para gestão integrada do portfólio",
+                            "Desenvolver dashboards executivos de acompanhamento em tempo real"
+                        ]
+                    }
+                },
+                "Estrutura & Planejamento": {
+                    questions: [
+                        {
+                            text: "Como é a estrutura responsável por projetos em sua empresa?",
+                            levels: {
+                                1: "Praticamente inexistente, há uma pessoa com experiência em projeto que atua em projetos maiores e auxilia times de projetos menores trazendo boas práticas de gestão de projetos.",
+                                2: "Existem algumas pessoas com experiência em projeto que atuam em projetos maiores em áreas normalmente responsáveis pela gestão dos projetos.",
+                                3: "Existe uma área responsável pelo tema de projetos na companhia que garante a aplicação da metodologia em gestão de projetos e aloca colaboradores próprios nos grandes projetos da companhia para gestão ou apoio.",
+                                4: "Existe uma área com responsabilidade exclusiva de projetos, incluindo metodologia e aplicação da priorização de projetos, gestão dos maiores projetos, seus reportes para alta-liderança, e a integração entre eles."
+                            }
+                        },
+                        {
+                            text: "Como é a distinção entre projetos e processos em sua companhia?",
+                            levels: {
+                                1: "Os projetos são reconhecidos pela companhia, existindo algum tipo de estrutura de reporte apartado do dia-a-dia dos colaboradores e áreas envolvidas, porém as responsabilidades no projeto não são muito claras.",
+                                2: "Existem responsabilidades claras no projeto. As pessoas envolvidas são alocadas parcialmente nos projetos, com sua rotina de governança do projeto respeitada.",
+                                3: "Existem responsabilidades e metas claras no projeto. Embora já existam pessoas totalmente dedicadas a um projeto, a maioria dos times alocados em projetos ainda compartilhando suas rotinas do dia-a-dia com a rotina do projeto.",
+                                4: "Existem projetos com times inteiro alocados em modelo full time."
+                            }
+                        }
+                    ],
+                    recommendations: {
+                        low: [
+                            "Contratar ou formar profissionais especializados em gestão de projetos",
+                            "Definir claramente a diferença entre projetos e operações",
+                            "Estabelecer matriz de responsabilidades (RACI) para projetos"
+                        ],
+                        medium: [
+                            "Criar área dedicada de gestão de projetos (PMO)",
+                            "Implementar processo de alocação parcial/dedicada por projeto",
+                            "Desenvolver critérios claros de priorização de projetos"
+                        ],
+                        high: [
+                            "Consolidar PMO estratégico com gestão integrada de portfólio",
+                            "Implementar modelo de squads dedicadas para projetos críticos",
+                            "Desenvolver centro de excelência em gestão de projetos"
+                        ]
+                    }
+                },
+                "Gestão da Mudança": {
+                    questions: [
+                        {
+                            text: "Como é tratado o tema de Gestão da Mudança nos projetos de sua empresa?",
+                            levels: {
+                                1: "Mudanças são tratadas informalmente e de forma reativa, sem processos definidos.",
+                                2: "Processos básicos de gestão de mudanças implementados, com algum grau de planejamento e comunicação formal.",
+                                3: "Gestão de mudanças integrada nos projetos, com planos e comunicação estruturada. Papel ativo no projeto, desde seu planejamento.",
+                                4: "Gestão de mudanças disseminada na cultura organizacional, com métricas e melhoria contínua."
+                            }
+                        },
+                        {
+                            text: "Como é acompanhado o engajamento dos times com o projeto?",
+                            levels: {
+                                1: "Não há acompanhamento de nível de engajamento dos envolvidos.",
+                                2: "Não há acompanhamento estruturado de nível de engajamento dos envolvidos, apenas conversas esporádicas focadas naqueles mais resistentes onde pode-se capturar algum insumo.",
+                                3: "Nível de engajamento do time é acompanhado através de presença em eventos do projeto, conversas e formulários esporádicos.",
+                                4: "Nível de engajamento é mensurado de forma estruturada e com metodologia."
+                            }
+                        }
+                    ],
+                    recommendations: {
+                        low: [
+                            "Mapear stakeholders e seus níveis de impacto/influência",
+                            "Criar plano básico de comunicação para projetos",
+                            "Implementar reuniões de feedback com times de projeto"
+                        ],
+                        medium: [
+                            "Desenvolver metodologia estruturada de gestão de mudanças",
+                            "Implementar pesquisas regulares de engajamento",
+                            "Criar programa de champions/embaixadores de mudança"
+                        ],
+                        high: [
+                            "Integrar gestão de mudanças desde a concepção dos projetos",
+                            "Implementar métricas avançadas de adoção e engajamento",
+                            "Desenvolver centro de competência em change management"
+                        ]
+                    }
+                },
+                "Capacitação & Gestão de Aprendizados": {
+                    questions: [
+                        {
+                            text: "Existem programas de capacitação e certificação no tema de Gestão de Projetos em sua empresa?",
+                            levels: {
+                                1: "Existem treinamentos esporádicos que são aplicados.",
+                                2: "Existem treinamentos periódicos e certificações iniciais (ex: CAPM, Agile Fundamentals) são valorizadas e podem até ser incentivadas pela companhia de forma pontual.",
+                                3: "Existe um programas estruturados de capacitação e certificação (ex: PMP, PMI-ACP, Scrum Master) com incentivos pela companhia.",
+                                4: "Existem programas de desenvolvimento contínuo, mentoring e certificações avançadas incentivadas (ex: PgMP, Change Management Professional - CMP)."
+                            }
+                        },
+                        {
+                            text: "Como é feita a gestão de aprendizados em Gestão de Projetos em sua companhia?",
+                            levels: {
+                                1: "Não há controle de aprendizados, mas eles são aplicados de forma informal nos projetos, pela lembrança dos envolvidos.",
+                                2: "Ao final do projeto, é realizada uma reunião para captura de aprendizados.",
+                                3: "Além de uma reunião ao final do projeto para captura de aprendizados, também são realizadas reuniões ao longo do projeto, aos finais de fases ou em ciclos periódicos. Estes aprendizados são formalizados e armazenados de forma institucional.",
+                                4: "Além de uma reunião ao final do projeto para captura de aprendizados, também são realizadas reuniões ao longo do projeto, aos finais de fases ou em ciclos periódicos. Todas estas reuniões, incluem a alta-liderança da companhia envolvida no projeto."
+                            }
+                        }
+                    ],
+                    recommendations: {
+                        low: [
+                            "Mapear competências atuais em gestão de projetos",
+                            "Implementar reuniões básicas de lições aprendidas",
+                            "Criar biblioteca básica de materiais de referência"
+                        ],
+                        medium: [
+                            "Desenvolver trilha de capacitação em gestão de projetos",
+                            "Implementar processo formal de captura de lições aprendidas",
+                            "Incentivar certificações básicas (CAPM, Scrum Fundamentals)"
+                        ],
+                        high: [
+                            "Criar universidade corporativa com foco em projetos",
+                            "Implementar base de conhecimento integrada de projetos",
+                            "Desenvolver programa de mentoria e certificações avançadas"
+                        ]
+                    }
+                },
+                "Uso de Ferramentas": {
+                    questions: [
+                        {
+                            text: "Que tipo de softwares e aplicativos são utilizados para a Gestão de Projetos em sua empresa?",
+                            levels: {
+                                1: "Uso básico de planilhas, apresentações e documentos.",
+                                2: "Uso de ferramentas digitais básicas para gestão, como MS Project e Trello.",
+                                3: "Uso de ferramentas integradas para portfólio e projetos como Jira, MS Project Server e Monday.com.",
+                                4: "Uso de ferramentas avançadas, integradas e customizadas como Clarity PPM, Planview e PowerBI ou tableau para dashboards."
+                            }
+                        }
+                    ],
+                    recommendations: {
+                        low: [
+                            "Padronizar templates de gestão em ferramentas básicas",
+                            "Avaliar ferramentas específicas de gestão de projetos",
+                            "Treinar equipes no uso eficaz de ferramentas disponíveis"
+                        ],
+                        medium: [
+                            "Implementar ferramenta unificada de gestão de projetos",
+                            "Integrar ferramentas com sistemas corporativos",
+                            "Desenvolver dashboards básicos de acompanhamento"
+                        ],
+                        high: [
+                            "Implementar solução enterprise de PPM",
+                            "Desenvolver integrações e customizações avançadas",
+                            "Criar cockpit executivo com analytics preditivos"
+                        ]
+                    }
+                }
+            }
+        };
+
+        const maturityLevels = {
+            1: { name: "Básico", color: "#EF4444", description: "Práticas iniciais e informais" },
+            2: { name: "Intermediário", color: "#F59E0B", description: "Processos básicos estabelecidos" },
+            3: { name: "Avançado", color: "#84CC16", description: "Processos maduros e integrados" },
+            4: { name: "Prática Líder", color: "#22C55E", description: "Excelência e referência de mercado" }
+        };
+
+        let currentPrincipleIndex = 0;
+        let responses = {};
+        let principleKeys = [];
+        let totalQuestions = 0;
+        let answeredQuestions = 0;
+
+        function startAssessment() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('assessmentQuestions').classList.remove('hidden');
+            document.getElementById('progressIndicator').classList.remove('hidden');
+            
+            principleKeys = Object.keys(assessmentData.principles);
+            totalQuestions = principleKeys.reduce((sum, key) => 
+                sum + assessmentData.principles[key].questions.length, 0);
+            
+            document.getElementById('totalCount').textContent = totalQuestions;
+            renderPrincipleQuestions();
+        }
+
+        function renderPrincipleQuestions() {
+            const container = document.getElementById('questionsContainer');
+            const principle = principleKeys[currentPrincipleIndex];
+            const principleData = assessmentData.principles[principle];
+            
+            container.innerHTML = `
+                <div class="principle-card fade-in">
+                    <h3 class="text-xl md:text-2xl font-bold text-peers-blue mb-2">
+                        ${principle}
+                    </h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-6">Dimensão ${currentPrincipleIndex + 1} de ${principleKeys.length}</p>
+                    
+                    ${principleData.questions.map((question, qIndex) => {
+                        const questionKey = `${principle}_Q${qIndex}`;
+                        return `
+                            <div class="question-card">
+                                <h4 class="font-semibold text-base md:text-lg mb-4 text-peers-blue">
+                                    ${question.text}
+                                </h4>
+                                <div class="space-y-3">
+                                    ${Object.entries(question.levels).map(([level, description]) => `
+                                        <div class="maturity-option p-3 md:p-4 bg-white rounded-lg border-2 border-gray-200 hover:border-peers-lime ${responses[questionKey] == level ? 'selected' : ''}"
+                                             onclick="selectAnswer('${questionKey}', ${level})">
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-sm mr-3 
+                                                            ${responses[questionKey] == level ? 'bg-peers-lime text-peers-blue' : ''}">
+                                                    ${level}
+                                                </div>
+                                                <div class="flex-1">
+                                                    <p class="text-xs md:text-sm">${description}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        function selectAnswer(questionKey, level) {
+            if (!responses[questionKey]) {
+                answeredQuestions++;
+            }
+            responses[questionKey] = level;
+            
+            // Update UI
+            const options = document.querySelectorAll(`[onclick*="${questionKey}"]`);
+            options.forEach(option => {
+                option.classList.remove('selected');
+                const optionLevel = parseInt(option.getAttribute('onclick').match(/\d+\)$/)[0].replace(')', ''));
+                if (optionLevel === level) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressPercent = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+            document.getElementById('answeredCount').textContent = answeredQuestions;
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (currentPrincipleIndex === 0) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+            
+            if (currentPrincipleIndex === principleKeys.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        function previousPrinciple() {
+            if (currentPrincipleIndex > 0) {
+                currentPrincipleIndex--;
+                renderPrincipleQuestions();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function nextPrinciple() {
+            // Check if current principle questions are answered
+            const principle = principleKeys[currentPrincipleIndex];
+            const principleData = assessmentData.principles[principle];
+            let allAnswered = true;
+            
+            principleData.questions.forEach((_, qIndex) => {
+                const questionKey = `${principle}_Q${qIndex}`;
+                if (!responses[questionKey]) {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                if (!confirm('Você ainda não respondeu todas as perguntas desta seção. Deseja continuar mesmo assim?')) {
+                    return;
+                }
+            }
+            
+            if (currentPrincipleIndex < principleKeys.length - 1) {
+                currentPrincipleIndex++;
+                renderPrincipleQuestions();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function submitAssessment() {
+            if (answeredQuestions < totalQuestions) {
+                if (!confirm('Você não respondeu todas as perguntas. Deseja continuar mesmo assim?')) {
+                    return;
+                }
+            }
+            
+            // Show data capture form
+            document.getElementById('assessmentQuestions').classList.add('hidden');
+            document.getElementById('progressIndicator').classList.add('hidden');
+            document.getElementById('dataCaptureSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // Phone number formatting
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('phoneInput');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    e.target.value = value;
+                });
+            }
+        });
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const userData = Object.fromEntries(formData.entries());
+            
+            // Here you would normally send data to your server/Google Sheets
+            console.log('User Data:', userData);
+            console.log('Assessment Responses:', responses);
+            
+            // For now, just generate the report
+            generateReport(userData);
+        }
+
+        function generateReport(userData = null) {
+            if (userData && userData.company) {
+                const reportTitle = document.querySelector('#reportSection h2');
+                if (reportTitle) {
+                    reportTitle.innerHTML = `Relatório de Maturidade em Gestão de Projetos<br><span class="text-lg md:text-xl font-normal text-gray-600">${userData.company}</span>`;
+                }
+            }
+            
+            document.getElementById('dataCaptureSection').classList.add('hidden');
+            document.getElementById('reportSection').classList.remove('hidden');
+            
+            // Calculate scores
+            const principleScores = {};
+            let totalScore = 0;
+            let totalResponses = 0;
+            
+            principleKeys.forEach(principle => {
+                const principleData = assessmentData.principles[principle];
+                let principleSum = 0;
+                let principleCount = 0;
+                
+                principleData.questions.forEach((_, qIndex) => {
+                    const questionKey = `${principle}_Q${qIndex}`;
+                    if (responses[questionKey]) {
+                        principleSum += parseInt(responses[questionKey]);
+                        principleCount++;
+                        totalScore += parseInt(responses[questionKey]);
+                        totalResponses++;
+                    }
+                });
+                
+                if (principleCount > 0) {
+                    principleScores[principle] = principleSum / principleCount;
+                } else {
+                    principleScores[principle] = 0;
+                }
+            });
+            
+            const overallScore = totalResponses > 0 ? totalScore / totalResponses : 0;
+            
+            // Display overall score
+            document.getElementById('overallScoreDisplay').textContent = overallScore.toFixed(1);
+            
+            // Update thermometer
+            const scorePercent = (overallScore / 4) * 100;
+            const indicator = document.getElementById('scoreIndicator');
+            indicator.style.left = `${scorePercent}%`;
+            
+            // Determine maturity level
+            let maturityLevel = 'Básico';
+            let maturityDescription = maturityLevels[1].description;
+            if (overallScore >= 3.5) {
+                maturityLevel = 'Prática Líder';
+                maturityDescription = maturityLevels[4].description;
+            } else if (overallScore >= 2.5) {
+                maturityLevel = 'Avançado';
+                maturityDescription = maturityLevels[3].description;
+            } else if (overallScore >= 1.5) {
+                maturityLevel = 'Intermediário';
+                maturityDescription = maturityLevels[2].description;
+            }
+            
+            document.getElementById('maturityLevelText').textContent = maturityLevel;
+            
+            // Create maturity analysis
+            createMaturityAnalysis(overallScore, maturityLevel, maturityDescription);
+            
+            // Create radar chart
+            createRadarChart(principleScores);
+            
+            // Generate detailed results
+            generateDetailedResults(principleScores);
+            
+            // Generate recommendations
+            generateRecommendations(principleScores);
+            
+            window.scrollTo(0, 0);
+        }
+
+        function createMaturityAnalysis(score, level, description) {
+            const container = document.getElementById('maturityAnalysis');
+            
+            // Análise geral baseada na pontuação
+            let generalAnalysis = "";
+            if (score < 1.5) {
+                generalAnalysis = "Sua empresa encontra-se em um estágio inicial na compreensão de como tratar projetos. É necessário reconhecer a importância e características distintas que projetos têm de processos.";
+            } else if (score < 2.5) {
+                generalAnalysis = "Sua empresa já começou a dar os primeiros passos em Gestão de Projetos. Neste estágio, ainda existe espaço para formalização e padronização dos processos.";
+            } else if (score < 3.5) {
+                generalAnalysis = "Sua empresa já atua de forma madura em Gestão de Projetos. Os próximos desafios estão relacionados a atuar de forma mais integrada entre os projetos.";
+            } else {
+                generalAnalysis = "Parabéns! Sua empresa apresenta alto grau de maturidade em Gestão de Projetos, já reconhecendo e aplicando seu papel estratégico essencial no crescimento.";
+            }
+            
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-gray-200">
+                        <div>
+                            <p class="text-sm text-gray-600">Nível Atual</p>
+                            <p class="text-xl font-bold text-peers-blue">${level}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">Pontuação</p>
+                            <p class="text-xl font-bold text-peers-lime">${score.toFixed(1)}/4.0</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white rounded-lg border-2 border-gray-200">
+                        <p class="text-sm text-gray-700 italic">"${description}"</p>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded-lg">
+                        <p class="text-sm text-gray-700">${generalAnalysis}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createRadarChart(scores) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            // Preparar labels mais curtas para mobile
+            const labels = Object.keys(scores).map(label => {
+                if (window.innerWidth < 768) {
+                    // Versões abreviadas para mobile
+                    const mobileLabels = {
+                        "Metodologia & Governança": "Metodologia",
+                        "Estrutura & Planejamento": "Estrutura",
+                        "Gestão da Mudança": "Mudança",
+                        "Capacitação & Gestão de Aprendizados": "Capacitação",
+                        "Uso de Ferramentas": "Ferramentas"
+                    };
+                    return mobileLabels[label] || label;
+                }
+                return label;
+            });
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Maturidade Atual',
+                        data: Object.values(scores),
+                        backgroundColor: 'rgba(225, 255, 0, 0.2)',
+                        borderColor: '#E1FF00',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#E1FF00',
+                        pointBorderColor: '#011334',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 4,
+                            min: 0,
+                            ticks: {
+                                stepSize: 1,
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.parsed.r.toFixed(1)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateDetailedResults(scores) {
+            const container = document.getElementById('detailedResults');
+            container.innerHTML = '';
+            
+            Object.entries(scores).forEach(([principle, score]) => {
+                const level = Math.round(score) || 1;
+                const levelData = maturityLevels[level];
+                
+                container.innerHTML += `
+                    <div class="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                            <h4 class="text-base md:text-lg font-semibold text-peers-blue mb-2 md:mb-0">${principle}</h4>
+                            <div class="flex items-center">
+                                <span class="text-xl md:text-2xl font-bold mr-2">${score.toFixed(1)}</span>
+                                <span class="px-3 py-1 rounded-full text-white text-xs md:text-sm font-medium"
+                                      style="background-color: ${levelData.color}">
+                                    ${levelData.name}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="h-3 rounded-full transition-all duration-500"
+                                 style="width: ${(score/4)*100}%; background-color: ${levelData.color}">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function generateRecommendations(scores) {
+            const container = document.getElementById('recommendationsSummary');
+            container.innerHTML = '';
+            
+            let allRecommendations = [];
+            
+            Object.entries(scores).forEach(([principle, score]) => {
+                const principleData = assessmentData.principles[principle];
+                let recommendationType = 'low';
+                
+                if (score >= 3) recommendationType = 'high';
+                else if (score >= 2) recommendationType = 'medium';
+                
+                const recommendations = principleData.recommendations[recommendationType] || [];
+                
+                recommendations.forEach(rec => {
+                    allRecommendations.push({
+                        principle: principle,
+                        recommendation: rec,
+                        priority: recommendationType === 'low' ? 'Alta' : recommendationType === 'medium' ? 'Média' : 'Baixa',
+                        score: score
+                    });
+                });
+            });
+            
+            // Sort by priority
+            allRecommendations.sort((a, b) => {
+                const priorityOrder = { 'Alta': 1, 'Média': 2, 'Baixa': 3 };
+                return priorityOrder[a.priority] - priorityOrder[b.priority];
+            });
+            
+            // Display top recommendations
+            allRecommendations.slice(0, 6).forEach(item => {
+                const priorityColors = {
+                    'Alta': 'bg-red-100 text-red-800',
+                    'Média': 'bg-yellow-100 text-yellow-800',
+                    'Baixa': 'bg-green-100 text-green-800'
+                };
+                
+                container.innerHTML += `
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium ${priorityColors[item.priority]}">
+                                ${item.priority}
+                            </span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-900">${item.recommendation}</p>
+                            <p class="text-xs text-gray-500 mt-1">${item.principle}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function closeTooltip() {
+            document.getElementById('tooltipOverlay').classList.remove('show');
+        }
+
+        function downloadPDF() {
+            // Simple print functionality
+            window.print();
+        }
+
+        // Handle responsive design
+        window.addEventListener('resize', function() {
+            // Redraw chart on resize if exists
+            const chartCanvas = document.getElementById('radarChart');
+            if (chartCanvas && chartCanvas.chart) {
+                chartCanvas.chart.resize();
+            }
+        });
+    </script>
+</body>
+</html>
